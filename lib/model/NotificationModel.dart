@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_social_network/model/User.dart';
+import 'package:link/model/User.dart';
 
 class NotificationModel {
   Timestamp createdAt;

@@ -3,18 +3,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/model/SocialCommentModel.dart';
-import 'package:flutter_social_network/model/SocialReactionModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:flutter_social_network/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
-import 'package:flutter_social_network/ui/profile/ProfileScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/model/SocialCommentModel.dart';
+import 'package:link/model/SocialReactionModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:link/ui/profile/ProfileScreen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailedPostScreen extends StatefulWidget {
@@ -73,7 +73,9 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                color: isDarkMode(context) ? Colors.grey[850] : Colors.grey.shade50,
+                color: isDarkMode(context)
+                    ? Colors.grey[850]
+                    : Colors.grey.shade50,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -103,20 +105,23 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                               controller: _commentController,
                               decoration: InputDecoration(
                                 isDense: true,
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 8),
                                 hintText: 'addCommentToThisPost'.tr(),
-                                hintStyle: TextStyle(color: Colors.grey.shade400),
+                                hintStyle:
+                                    TextStyle(color: Colors.grey.shade400),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(360),
                                     ),
-                                    borderSide: BorderSide(style: BorderStyle.none)),
+                                    borderSide:
+                                        BorderSide(style: BorderStyle.none)),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(360),
                                     ),
-                                    borderSide: BorderSide(style: BorderStyle.none)),
+                                    borderSide:
+                                        BorderSide(style: BorderStyle.none)),
                               ),
                               textCapitalization: TextCapitalization.sentences,
                               maxLines: 5,
@@ -135,7 +140,8 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                           ),
                           onPressed: () async {
                             if (_commentController.text.isNotEmpty) {
-                              _postComment(_commentController.text, widget.post);
+                              _postComment(
+                                  _commentController.text, widget.post);
                               _commentController.clear();
                               setState(() {});
                             }
@@ -173,8 +179,8 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                   GestureDetector(
                     onTap: () => push(context,
                         ProfileScreen(user: post.author, fromContainer: false)),
-                    child:
-                        displayCircleImage(post.author.profilePictureURL, 55, false),
+                    child: displayCircleImage(
+                        post.author.profilePictureURL, 55, false),
                   ),
                   SizedBox(width: 16),
                   Expanded(
@@ -185,8 +191,8 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                       children: [
                         Text(
                           post.author.fullName(),
-                          style:
-                              TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 17),
                         ),
                         SizedBox(
                           height: 2,
@@ -230,16 +236,16 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                               height: 150,
                               decoration: BoxDecoration(
                                 color: Colors.black,
-                                image:
-                                    post.postMedia[index].videoThumbnail != null &&
-                                            post.postMedia[index].videoThumbnail!
-                                                .isNotEmpty
-                                        ? DecorationImage(
-                                            image: Image.network(post
-                                                    .postMedia[index]
-                                                    .videoThumbnail!)
-                                                .image)
-                                        : null,
+                                image: post.postMedia[index].videoThumbnail !=
+                                            null &&
+                                        post.postMedia[index].videoThumbnail!
+                                            .isNotEmpty
+                                    ? DecorationImage(
+                                        image: Image.network(post
+                                                .postMedia[index]
+                                                .videoThumbnail!)
+                                            .image)
+                                    : null,
                               ),
                               child: Center(
                                 child: FloatingActionButton(
@@ -249,15 +255,18 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                                   onPressed: () => push(
                                     context,
                                     FullScreenVideoViewer(
-                                        videoUrl: postMedia.url, heroTag: post.id),
+                                        videoUrl: postMedia.url,
+                                        heroTag: post.id),
                                   ),
                                 ),
                               ),
                             );
                           } else if (postMedia.mime.contains('image')) {
                             return GestureDetector(
-                                onTap: () => push(context,
-                                    FullScreenImageViewer(imageUrl: postMedia.url)),
+                                onTap: () => push(
+                                    context,
+                                    FullScreenImageViewer(
+                                        imageUrl: postMedia.url)),
                                 child: displayImage(postMedia.url, 150));
                           } else {
                             return Container();
@@ -288,21 +297,23 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
               Row(
                 children: [
                   SizedBox(width: 6),
-                  FlutterReactionButtonCheck(
+                  ReactionButtonToggle(
                     onReactionChanged: (reaction, index, isChecked) {
                       setState(() {
                         post.myReaction = Reaction(
                             id: reaction!.id,
                             icon: reaction.icon,
-                            previewIcon: reaction.previewIcon);
+                            previewIcon: reaction.previewIcon,
+                            value: null);
                       });
                       if (isChecked) {
                         bool isNewReaction = false;
                         SocialReactionModel? postReaction = widget.reactions
                             .firstWhere((element) => element?.postID == post.id,
                                 orElse: () {
-                                  isNewReaction = true;
-                          String reactionString = getReactionString(reaction!.id!);
+                          isNewReaction = true;
+                          String reactionString =
+                              getReactionString(reaction!.id!);
                           SocialReactionModel newReaction = SocialReactionModel(
                               postID: post.id,
                               createdAt: Timestamp.now(),
@@ -317,20 +328,21 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                           });
                           fireStoreUtils.postReaction(postReaction!, post);
                         } else {
-                          postReaction!.reaction = getReactionString(reaction!.id!);
+                          postReaction!.reaction =
+                              getReactionString(reaction!.id!);
                           postReaction.createdAt = Timestamp.now();
                           fireStoreUtils.updateReaction(postReaction, post);
                         }
                       } else {
-                        widget.reactions
-                            .removeWhere((element) => element?.postID == post.id);
+                        widget.reactions.removeWhere(
+                            (element) => element?.postID == post.id);
                         setState(() {
                           post.reactionsCount--;
                         });
                         fireStoreUtils.removeReaction(post);
                       }
                     },
-                    isChecked: post.myReaction.id != 0,
+                    isChecked: post.myReaction.value != 0,
                     reactions: facebookReactions,
                     initialReaction: Reaction(
                       id: 0,
@@ -339,7 +351,8 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                         child: Image.asset(
                           'assets/images/like.png',
                           height: 20,
-                          color: isDarkMode(context) ? Colors.grey.shade200 : null,
+                          color:
+                              isDarkMode(context) ? Colors.grey.shade200 : null,
                         ),
                       ),
                       icon: Container(
@@ -347,12 +360,14 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                         child: Image.asset(
                           'assets/images/like.png',
                           height: 20,
-                          color: isDarkMode(context) ? Colors.grey.shade200 : null,
+                          color:
+                              isDarkMode(context) ? Colors.grey.shade200 : null,
                         ),
                       ),
+                      value: null,
                     ),
-                    selectedReaction: post.myReaction.id != 0
-                        ? facebookReactions[post.myReaction.id! - 1]
+                    selectedReaction: post.myReaction.value != 0
+                        ? facebookReactions[post.myReaction.value! - 1]
                         : facebookReactions[0],
                   ),
                   SizedBox(width: 8),
@@ -432,11 +447,17 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
               hideProgress();
               if (isSuccessful) {
                 Navigator.pop(context);
-                showAlertDialog(context, 'block'.tr(),
-                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']), false);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']),
+                    false);
               } else {
-                showAlertDialog(context, 'block'.tr(),
-                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']), false);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']),
+                    false);
               }
             },
           ),
@@ -454,13 +475,15 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'postHasBeenReported'.tr(args: ['${post.author.fullName()}']),
+                    'postHasBeenReported'
+                        .tr(args: ['${post.author.fullName()}']),
                     false);
               } else {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'couldnNotReportPost'.tr(args: ['${post.author.fullName()}']),
+                    'couldnNotReportPost'
+                        .tr(args: ['${post.author.fullName()}']),
                     false);
               }
             },

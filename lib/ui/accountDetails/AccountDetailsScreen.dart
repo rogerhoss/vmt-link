@@ -2,13 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/reauthScreen/reauth_user_screen.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
   final User user;

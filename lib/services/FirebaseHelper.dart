@@ -12,24 +12,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_native_image/flutter_native_image.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/BlockUserModel.dart';
-import 'package:flutter_social_network/model/ChannelParticipation.dart';
-import 'package:flutter_social_network/model/ChatModel.dart';
-import 'package:flutter_social_network/model/ChatVideoContainer.dart';
-import 'package:flutter_social_network/model/ContactModel.dart';
-import 'package:flutter_social_network/model/ConversationModel.dart';
-import 'package:flutter_social_network/model/HomeConversationModel.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/NotificationModel.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/model/SocialCommentModel.dart';
-import 'package:flutter_social_network/model/SocialReactionModel.dart';
-import 'package:flutter_social_network/model/StoryModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/BlockUserModel.dart';
+import 'package:link/model/ChannelParticipation.dart';
+import 'package:link/model/ChatModel.dart';
+import 'package:link/model/ChatVideoContainer.dart';
+import 'package:link/model/ContactModel.dart';
+import 'package:link/model/ConversationModel.dart';
+import 'package:link/model/HomeConversationModel.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/NotificationModel.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/model/SocialCommentModel.dart';
+import 'package:link/model/SocialReactionModel.dart';
+import 'package:link/model/StoryModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
@@ -98,7 +98,8 @@ class FireStoreUtils {
   /// @param image file to be uploaded to firestore
   /// @param context is required to show progress
   /// @return a Url object containing mime type of the file and download url
-  Future<Url> uploadChatImageToFireStorage(File image, BuildContext context) async {
+  Future<Url> uploadChatImageToFireStorage(
+      File image, BuildContext context) async {
     showProgress(context, 'Uploading image...', false);
     var uniqueID = Uuid().v4();
     File compressedImage = await _compressImage(image);
@@ -181,7 +182,8 @@ class FireStoreUtils {
   /// * users that are already your friends
   /// * if @param searchScreen is true then we include users that you didn't
   /// send friend/follow requests and neither did they.
-  Future<List<ContactModel>> getContacts(String userID, bool searchScreen) async {
+  Future<List<ContactModel>> getContacts(
+      String userID, bool searchScreen) async {
     /// get users that you both friend/follow each other
     friends = await getFriends(MyAppState.currentUser!.userID);
 
@@ -201,7 +203,8 @@ class FireStoreUtils {
       /// looping over the pendingList list
       /// we set contactModel.type to be PENDING and add the contactModel to
       /// the contacts list
-      contactsList.add(ContactModel(type: ContactType.PENDING, user: pendingUser));
+      contactsList
+          .add(ContactModel(type: ContactType.PENDING, user: pendingUser));
     }
     for (final newFriendRequest in receivedRequests) {
       /// looping over the receivedRequests list
@@ -221,8 +224,8 @@ class FireStoreUtils {
             User contact = User.fromJson(user.data());
 
             /// check if the contact is already in our friends list
-            User? friend =
-                friends.firstWhereOrNull((user) => user?.userID == contact.userID);
+            User? friend = friends
+                .firstWhereOrNull((user) => user?.userID == contact.userID);
 
             /// check if the contact is already in our pending list
             User? pending = pendingList
@@ -242,8 +245,8 @@ class FireStoreUtils {
 
                 /// we set contactModel.type to be UNKNOWN and add the contactModel to
                 /// the contacts list
-                contactsList
-                    .add(ContactModel(type: ContactType.UNKNOWN, user: contact));
+                contactsList.add(
+                    ContactModel(type: ContactType.UNKNOWN, user: contact));
               }
             }
           } catch (e) {
@@ -298,7 +301,8 @@ class FireStoreUtils {
       if (friendOrNull != null) actualFriends.add(pendingUser);
     });
 
-    actualFriends.removeWhere((element) => validateIfUserBlocked(element.userID));
+    actualFriends
+        .removeWhere((element) => validateIfUserBlocked(element.userID));
 
     return actualFriends.toSet().toList();
   }
@@ -330,9 +334,9 @@ class FireStoreUtils {
 
     await Future.forEach(sentRequestsResult.docs,
         (DocumentSnapshot<Map<String, dynamic>> document) {
-          User user = User.fromJson(document.data() ?? {});
-      User? pendingOrNull =
-          receivedList.firstWhereOrNull((element) => element?.userID == user.userID);
+      User user = User.fromJson(document.data() ?? {});
+      User? pendingOrNull = receivedList
+          .firstWhereOrNull((element) => element?.userID == user.userID);
       if (pendingOrNull == null) pendingList.add(user);
     });
     return pendingList.toSet().toList();
@@ -365,7 +369,7 @@ class FireStoreUtils {
 
     await Future.forEach(receivedRequestsResult.docs,
         (DocumentSnapshot<Map<String, dynamic>> document) {
-          User sentFriend = User.fromJson(document.data() ?? {});
+      User sentFriend = User.fromJson(document.data() ?? {});
       User? sentOrNull = pendingList
           .firstWhereOrNull((element) => element?.userID == sentFriend.userID);
       if (sentOrNull == null) receivedList.add(sentFriend);
@@ -416,10 +420,11 @@ class FireStoreUtils {
     });
 
     /// share new user's stories with current user
-    QuerySnapshot<Map<String, dynamic>> pendingUserStoriesQuery = await firestore
-        .collection(STORIES)
-        .where('authorID', isEqualTo: pendingUser.userID)
-        .get();
+    QuerySnapshot<Map<String, dynamic>> pendingUserStoriesQuery =
+        await firestore
+            .collection(STORIES)
+            .where('authorID', isEqualTo: pendingUser.userID)
+            .get();
 
     await Future.forEach(pendingUserStoriesQuery.docs,
         (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
@@ -450,10 +455,11 @@ class FireStoreUtils {
     });
 
     /// share current user's stories with new friend
-    QuerySnapshot<Map<String, dynamic>> currentUserStoriesQuery = await firestore
-        .collection(STORIES)
-        .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
-        .get();
+    QuerySnapshot<Map<String, dynamic>> currentUserStoriesQuery =
+        await firestore
+            .collection(STORIES)
+            .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
+            .get();
 
     await Future.forEach(currentUserStoriesQuery.docs,
         (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
@@ -475,8 +481,11 @@ class FireStoreUtils {
         {'fromUser': MyAppState.currentUser!.toJson()});
 
     if (pendingUser.settings.pushNewMessages) {
-      await sendNotification(pendingUser.fcmToken,
-          MyAppState.currentUser!.fullName(), 'Accepted your friend request.', null);
+      await sendNotification(
+          pendingUser.fcmToken,
+          MyAppState.currentUser!.fullName(),
+          'Accepted your friend request.',
+          null);
     }
   }
 
@@ -693,7 +702,8 @@ class FireStoreUtils {
                       if (newHomeConversation.conversationModel!.id.isEmpty)
                         newHomeConversation.conversationModel!.id = channel.id;
 
-                      homeConversations.removeWhere((conversationModelToDelete) {
+                      homeConversations
+                          .removeWhere((conversationModelToDelete) {
                         return newHomeConversation.conversationModel!.id ==
                             conversationModelToDelete.conversationModel!.id;
                       });
@@ -719,7 +729,8 @@ class FireStoreUtils {
                       if (newHomeConversation.conversationModel!.id.isEmpty)
                         newHomeConversation.conversationModel!.id = channel.id;
 
-                      homeConversations.removeWhere((conversationModelToDelete) {
+                      homeConversations
+                          .removeWhere((conversationModelToDelete) {
                         return newHomeConversation.conversationModel!.id ==
                             conversationModelToDelete.conversationModel!.id;
                       });
@@ -767,14 +778,16 @@ class FireStoreUtils {
   /// @param channelID id of the channel
   /// @return yields a list of string containing the IDs of the group members
   Stream<List<String>> getGroupMembersIDs(String channelID) async* {
-    StreamController<List<String>> membersIDsStreamController = StreamController();
+    StreamController<List<String>> membersIDsStreamController =
+        StreamController();
     firestore
         .collection(CHANNEL_PARTICIPATION)
         .where('channel', isEqualTo: channelID)
         .snapshots()
         .listen((participations) {
       List<String> uids = [];
-      for (DocumentSnapshot<Map<String, dynamic>> document in participations.docs) {
+      for (DocumentSnapshot<Map<String, dynamic>> document
+          in participations.docs) {
         uids.add(document.data()!['user'] ?? '');
       }
       if (uids.contains(MyAppState.currentUser!.userID)) {
@@ -797,7 +810,8 @@ class FireStoreUtils {
         User userModel = User.fromJson(user.data() ?? {});
         userStreamController.sink.add(userModel);
       } catch (e) {
-        print('FireStoreUtils.getUserByID failed to parse user object ${user.id}');
+        print(
+            'FireStoreUtils.getUserByID failed to parse user object ${user.id}');
       }
     });
     yield* userStreamController.stream;
@@ -883,8 +897,8 @@ class FireStoreUtils {
   /// message
   /// @param conversationModel an objects which contains data related to the
   /// channel
-  Future<void> sendMessage(List<User> members, bool isGroup, MessageData message,
-      ConversationModel conversationModel) async {
+  Future<void> sendMessage(List<User> members, bool isGroup,
+      MessageData message, ConversationModel conversationModel) async {
     var ref = firestore
         .collection(CHANNELS)
         .doc(conversationModel.id)
@@ -903,8 +917,8 @@ class FireStoreUtils {
       if (element.settings.pushNewMessages) {
         User? friend;
         if (isGroup) {
-          friend =
-              payloadFriends.firstWhere((user) => user.fcmToken == element.fcmToken);
+          friend = payloadFriends
+              .firstWhere((user) => user.fcmToken == element.fcmToken);
           payloadFriends.remove(friend);
           payloadFriends.add(MyAppState.currentUser!);
         }
@@ -918,7 +932,9 @@ class FireStoreUtils {
         };
         await sendNotification(
             element.fcmToken,
-            isGroup ? conversationModel.name : MyAppState.currentUser!.fullName(),
+            isGroup
+                ? conversationModel.name
+                : MyAppState.currentUser!.fullName(),
             message.content,
             payload);
         if (isGroup) {
@@ -991,8 +1007,8 @@ class FireStoreUtils {
     await channelDoc.set(conversationModel.toJson()).then((onValue) async {
       selectedUsers.add(MyAppState.currentUser!);
       for (User user in selectedUsers) {
-        ChannelParticipation channelParticipation =
-            ChannelParticipation(channel: conversationModel.id, user: user.userID);
+        ChannelParticipation channelParticipation = ChannelParticipation(
+            channel: conversationModel.id, user: user.userID);
         await createChannelParticipation(channelParticipation);
       }
       groupConversationModel = HomeConversationModel(
@@ -1041,7 +1057,10 @@ class FireStoreUtils {
         source: MyAppState.currentUser!.userID,
         dest: blockedUser.userID,
         createdAt: Timestamp.now());
-    await firestore.collection(REPORTS).add(blockUserModel.toJson()).then((onValue) {
+    await firestore
+        .collection(REPORTS)
+        .add(blockUserModel.toJson())
+        .then((onValue) {
       isSuccessful = true;
     });
     return isSuccessful;
@@ -1139,7 +1158,8 @@ class FireStoreUtils {
       await Future.forEach(story.docs,
           (DocumentSnapshot<Map<String, dynamic>> story) {
         StoryModel storyModel = StoryModel.fromJson(story.data() ?? {});
-        if (!validateIfUserBlocked(storyModel.authorID)) if (storyModel.authorID ==
+        if (!validateIfUserBlocked(storyModel.authorID)) if (storyModel
+                .authorID ==
             MyAppState.currentUser!.userID) {
           _storiesList.insert(0, storyModel);
         } else {
@@ -1154,7 +1174,8 @@ class FireStoreUtils {
   /// dispose stories stream controller to avoid memory leaks
   void disposeUserStoriesStream() {
     if (_storiesStream != null) _storiesStream!.close();
-    if (_storiesStreamSubscription != null) _storiesStreamSubscription!.cancel();
+    if (_storiesStreamSubscription != null)
+      _storiesStreamSubscription!.cancel();
   }
 
   /// query user posts feed as a stream which updates whenever required
@@ -1170,13 +1191,14 @@ class FireStoreUtils {
         .orderBy('createdAt', descending: true)
         .snapshots();
 
-    _postsStreamSubscription =
-        result.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
+    _postsStreamSubscription = result
+        .listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
       _postsList.clear();
       await Future.forEach(querySnapshot.docs,
           (DocumentSnapshot<Map<String, dynamic>> post) {
         PostModel postModel = PostModel.fromJson(post.data() ?? {});
-        if (!validateIfUserBlocked(postModel.authorID)) _postsList.add(postModel);
+        if (!validateIfUserBlocked(postModel.authorID))
+          _postsList.add(postModel);
       });
       _postsStream!.sink.add(_postsList);
     });
@@ -1200,7 +1222,8 @@ class FireStoreUtils {
         .where('postID', isEqualTo: post.id)
         .orderBy('createdAt')
         .get();
-    await Future.forEach(result.docs, (DocumentSnapshot<Map<String, dynamic>> post) {
+    await Future.forEach(result.docs,
+        (DocumentSnapshot<Map<String, dynamic>> post) {
       print('FireStoreUtils.getPostComments ${post.id}');
       try {
         SocialCommentModel socialCommentModel =
@@ -1208,7 +1231,8 @@ class FireStoreUtils {
         if (!validateIfUserBlocked(socialCommentModel.authorID))
           _commentsList.add(socialCommentModel);
       } catch (e) {
-        print('FireStoreUtils.getPostComments SOCIAL_COMMENTS table invalid json '
+        print(
+            'FireStoreUtils.getPostComments SOCIAL_COMMENTS table invalid json '
             'structure exception, doc id is => ${post.id}');
       }
     });
@@ -1219,7 +1243,8 @@ class FireStoreUtils {
   /// @param comment the content of the comment
   /// @param post is the related posted
   postComment(String comment, PostModel post) async {
-    DocumentReference commentDocument = firestore.collection(SOCIAL_COMMENTS).doc();
+    DocumentReference commentDocument =
+        firestore.collection(SOCIAL_COMMENTS).doc();
     SocialCommentModel newComment = SocialCommentModel(
         authorID: MyAppState.currentUser!.userID,
         createdAt: Timestamp.now(),
@@ -1236,9 +1261,11 @@ class FireStoreUtils {
     /// update the post comment count field
     await Future.forEach(outDatedPosts.docs,
         (DocumentSnapshot<Map<String, dynamic>> post) async {
-          num newCount = post.data()!['commentCount'] ?? 0;
+      num newCount = post.data()!['commentCount'] ?? 0;
       newCount++;
-      await firestore.doc(post.reference.path).update({'commentCount': newCount});
+      await firestore
+          .doc(post.reference.path)
+          .update({'commentCount': newCount});
     });
 
     QuerySnapshot<Map<String, dynamic>> mainPost = await firestore
@@ -1268,7 +1295,10 @@ class FireStoreUtils {
   /// @param SocialReactionModel is the new reaction to be added to the post
   /// @param PostModel is the post that holds the new reaction
   postReaction(SocialReactionModel newReaction, PostModel post) async {
-    await firestore.collection(SOCIAL_REACTIONS).doc().set(newReaction.toJson());
+    await firestore
+        .collection(SOCIAL_REACTIONS)
+        .doc()
+        .set(newReaction.toJson());
     QuerySnapshot<Map<String, dynamic>> outDatedPosts = await firestore
         .collectionGroup(MAIN_FEED)
         .where('id', isEqualTo: post.id)
@@ -1279,7 +1309,9 @@ class FireStoreUtils {
         (DocumentSnapshot<Map<String, dynamic>> post) async {
       num newCount = post.data()!['reactionsCount'] ?? 0;
       newCount++;
-      await firestore.doc(post.reference.path).update({'reactionsCount': newCount});
+      await firestore
+          .doc(post.reference.path)
+          .update({'reactionsCount': newCount});
     });
 
     QuerySnapshot<Map<String, dynamic>> mainPost = await firestore
@@ -1357,8 +1389,8 @@ class FireStoreUtils {
 
     await Future.forEach(
         result.docs,
-        (DocumentSnapshot<Map<String, dynamic>> reaction) =>
-            myReactions.add(SocialReactionModel.fromJson(reaction.data() ?? {})));
+        (DocumentSnapshot<Map<String, dynamic>> reaction) => myReactions
+            .add(SocialReactionModel.fromJson(reaction.data() ?? {})));
     return myReactions;
   }
 
@@ -1392,8 +1424,8 @@ class FireStoreUtils {
     List<User> knownUsers = await getFriends(MyAppState.currentUser!.userID);
     knownUsers.add(MyAppState.currentUser!);
 
-    _discoverPostsStreamSubscription =
-        result.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
+    _discoverPostsStreamSubscription = result.listen(
+        (QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
       _postsList.clear();
       await Future.forEach(querySnapshot.docs,
           (DocumentSnapshot<Map<String, dynamic>> post) {
@@ -1435,8 +1467,8 @@ class FireStoreUtils {
         .orderBy('createdAt', descending: true)
         .snapshots();
 
-    _profilePostsStreamSubscription =
-        result.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
+    _profilePostsStreamSubscription = result.listen(
+        (QuerySnapshot<Map<String, dynamic>> querySnapshot) async {
       _profilePosts.clear();
       await Future.forEach(querySnapshot.docs,
           (DocumentSnapshot<Map<String, dynamic>> post) {
@@ -1480,9 +1512,11 @@ class FireStoreUtils {
         .orderBy('createdAt', descending: true)
         .get();
 
-    Future.forEach(result.docs, (DocumentSnapshot<Map<String, dynamic>> document) {
+    Future.forEach(result.docs,
+        (DocumentSnapshot<Map<String, dynamic>> document) {
       try {
-        _userNotifications.add(NotificationModel.fromJson(document.data() ?? {}));
+        _userNotifications
+            .add(NotificationModel.fromJson(document.data() ?? {}));
       } catch (e) {
         print('FireStoreUtils.getUserNotifications: notifications table '
             'invalid json structure exception, doc id is => ${document.id}');
@@ -1537,7 +1571,8 @@ class FireStoreUtils {
       File video, BuildContext context, File thumbnail, String progress) async {
     var uniqueID = Uuid().v4();
     File compressedVideo = await _compressVideo(video);
-    Reference upload = storage.child('flutter/social_network/videos/$uniqueID.mp4');
+    Reference upload =
+        storage.child('flutter/social_network/videos/$uniqueID.mp4');
     SettableMetadata metadata = new SettableMetadata(contentType: 'video');
     UploadTask uploadTask = upload.putFile(compressedVideo, metadata);
     uploadTask.snapshotEvents.listen((event) {
@@ -1564,8 +1599,8 @@ class FireStoreUtils {
     try {
       var uniqueID = Uuid().v4();
       File compressedImage = await _compressImage(file);
-      Reference upload =
-          storage.child('flutter/social_network/video_thumbnails/$uniqueID.png');
+      Reference upload = storage
+          .child('flutter/social_network/video_thumbnails/$uniqueID.png');
       UploadTask uploadTask = upload.putFile(compressedImage);
       var downloadUrl =
           await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
@@ -1751,18 +1786,21 @@ class FireStoreUtils {
       if (result.status == LoginStatus.success) {
         // you are logged
         AccessToken? token = await facebookAuth.accessToken;
-        return await handleFacebookLogin(await facebookAuth.getUserData(), token!);
+        return await handleFacebookLogin(
+            await facebookAuth.getUserData(), token!);
       }
     } else {
       AccessToken? token = await facebookAuth.accessToken;
-      return await handleFacebookLogin(await facebookAuth.getUserData(), token!);
+      return await handleFacebookLogin(
+          await facebookAuth.getUserData(), token!);
     }
   }
 
   static handleFacebookLogin(
       Map<String, dynamic> userData, AccessToken token) async {
     auth.UserCredential authResult = await auth.FirebaseAuth.instance
-        .signInWithCredential(auth.FacebookAuthProvider.credential(token.token));
+        .signInWithCredential(
+            auth.FacebookAuthProvider.credential(token.token));
     User? user = await getCurrentUser(authResult.user?.uid ?? '');
     List<String> fullName = (userData['name'] as String).split(' ');
     String firstName = '';
@@ -1814,10 +1852,10 @@ class FireStoreUtils {
     if (appleCredential.status == apple.AuthorizationStatus.authorized) {
       final auth.AuthCredential credential =
           auth.OAuthProvider('apple.com').credential(
-            accessToken: String.fromCharCodes(
+        accessToken: String.fromCharCodes(
             appleCredential.credential?.authorizationCode ?? []),
-        idToken:
-            String.fromCharCodes(appleCredential.credential?.identityToken ?? []),
+        idToken: String.fromCharCodes(
+            appleCredential.credential?.identityToken ?? []),
       );
       return await handleAppleLogin(credential, appleCredential.credential!);
     } else {
@@ -1993,11 +2031,17 @@ class FireStoreUtils {
     }
   }
 
-  static firebaseSignUpWithEmailAndPassword(String emailAddress, String password,
-      File? image, String firstName, String lastName, String mobile) async {
+  static firebaseSignUpWithEmailAndPassword(
+      String emailAddress,
+      String password,
+      File? image,
+      String firstName,
+      String lastName,
+      String mobile) async {
     try {
       auth.UserCredential result = await auth.FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: emailAddress, password: password);
+          .createUserWithEmailAndPassword(
+              email: emailAddress, password: password);
       String profilePicUrl = '';
       if (image != null) {
         updateProgress('Uploading image, Please wait...'.tr());
@@ -2247,8 +2291,8 @@ class FireStoreUtils {
 /// @param payload this is a map of data required if you want to handle click
 /// events on the notification from system tray when the app is in the
 /// background or killed
-sendNotification(
-    String token, String title, String body, Map<String, dynamic>? payload) async {
+sendNotification(String token, String title, String body,
+    Map<String, dynamic>? payload) async {
   await http.post(
     Uri.parse('https://fcm.googleapis.com/fcm/send'),
     headers: <String, String>{

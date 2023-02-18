@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/login/LoginScreen.dart';
-import 'package:flutter_social_network/ui/signUp/SignUpScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/login/LoginScreen.dart';
+import 'package:link/ui/signUp/SignUpScreen.dart';
 
 class AuthScreen extends StatelessWidget {
   @override
@@ -16,7 +16,7 @@ class AuthScreen extends StatelessWidget {
           /// the app logo
           Center(
             child: Image.asset(
-              'assets/images/auth_image.png',
+              'assets/images/app_logo.png',
               fit: BoxFit.cover,
               width: 150,
               height: 150,
@@ -54,7 +54,7 @@ class AuthScreen extends StatelessWidget {
               constraints: const BoxConstraints(minWidth: double.infinity),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Color(COLOR_PRIMARY),
+                  backgroundColor: Color(COLOR_PRIMARY),
                   textStyle: TextStyle(color: Colors.white),
                   padding: EdgeInsets.only(top: 12, bottom: 12),
                   shape: RoundedRectangleBorder(

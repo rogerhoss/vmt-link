@@ -4,15 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/accountDetails/AccountDetailsScreen.dart';
-import 'package:flutter_social_network/ui/auth/AuthScreen.dart';
-import 'package:flutter_social_network/ui/contactUs/ContactUsScreen.dart';
-import 'package:flutter_social_network/ui/reauthScreen/reauth_user_screen.dart';
-import 'package:flutter_social_network/ui/settings/SettingsScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/accountDetails/AccountDetailsScreen.dart';
+import 'package:link/ui/auth/AuthScreen.dart';
+import 'package:link/ui/contactUs/ContactUsScreen.dart';
+import 'package:link/ui/reauthScreen/reauth_user_screen.dart';
+import 'package:link/ui/settings/SettingsScreen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'general',
+              'Profile Settings ',
               style: TextStyle(
                   color: isDarkMode(context) ? Colors.white54 : Colors.black54,
                   fontSize: 17),
@@ -139,7 +139,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.red,
+                color: Color(COLOR_GLOBAL_ONE),
               ),
             ).tr(),
             onPressed: () async {

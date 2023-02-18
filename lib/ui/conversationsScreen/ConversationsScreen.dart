@@ -1,17 +1,15 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/ConversationModel.dart';
-import 'package:flutter_social_network/model/HomeConversationModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/chat/ChatScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/ConversationModel.dart';
+import 'package:link/model/HomeConversationModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/chat/ChatScreen.dart';
 
 class ConversationsScreen extends StatefulWidget {
   final User user;
@@ -56,7 +54,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator.adaptive(
-                      valueColor: AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
                     ),
                   ),
                 );
@@ -70,7 +69,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       User friend = snap.data![index];
                       return Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 4, right: 4),
+                        padding:
+                            const EdgeInsets.only(top: 8.0, left: 4, right: 4),
                         child: InkWell(
                           onTap: () async {
                             String channelID;
@@ -80,14 +80,17 @@ class _ConversationsState extends State<ConversationsScreen> {
                               channelID = user.userID + friend.userID;
                             }
                             ConversationModel? conversationModel =
-                                await fireStoreUtils.getChannelByIdOrNull(channelID);
+                                await fireStoreUtils
+                                    .getChannelByIdOrNull(channelID);
                             push(
                                 context,
                                 ChatScreen(
-                                    homeConversationModel: HomeConversationModel(
-                                        isGroupChat: false,
-                                        members: [friend],
-                                        conversationModel: conversationModel)));
+                                    homeConversationModel:
+                                        HomeConversationModel(
+                                            isGroupChat: false,
+                                            members: [friend],
+                                            conversationModel:
+                                                conversationModel)));
                           },
                           child: Column(
                             children: [
@@ -125,13 +128,16 @@ class _ConversationsState extends State<ConversationsScreen> {
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator.adaptive(
-                      valueColor: AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Color(COLOR_ACCENT)),
                     ),
                   ),
                 );
-              } else if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+              } else if (!snapshot.hasData ||
+                  (snapshot.data?.isEmpty ?? true)) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 150),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 150),
                   child: Center(
                       child: showEmptyState('noConversationsFound'.tr(),
                           'allYourConversationsWillShowUpHere'.tr())),
@@ -174,7 +180,8 @@ class _ConversationsState extends State<ConversationsScreen> {
     }
     return homeConversationModel.isGroupChat
         ? Padding(
-      padding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 12.8),
+            padding:
+                const EdgeInsetsDirectional.only(start: 16.0, bottom: 12.8),
             child: InkWell(
               onTap: () {
                 push(context,
@@ -205,8 +212,9 @@ class _ConversationsState extends State<ConversationsScreen> {
                             '${homeConversationModel.conversationModel!.name}',
                             style: TextStyle(
                               fontSize: 17,
-                              color:
-                                  isDarkMode(context) ? Colors.white : Colors.black,
+                              color: isDarkMode(context)
+                                  ? Colors.white
+                                  : Colors.black,
                               fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto',
                             ),
                           ),
@@ -268,8 +276,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.only(top: 8, end: 8, start: 12),
+                    padding: const EdgeInsetsDirectional.only(
+                        top: 8, end: 8, start: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -278,9 +286,11 @@ class _ConversationsState extends State<ConversationsScreen> {
                           '${homeConversationModel.members.first.fullName()}',
                           style: TextStyle(
                               fontSize: 17,
-                              color:
-                                  isDarkMode(context) ? Colors.white : Colors.black,
-                              fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto'),
+                              color: isDarkMode(context)
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontFamily:
+                                  Platform.isIOS ? 'sanFran' : 'Roboto'),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),

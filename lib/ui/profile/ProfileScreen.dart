@@ -6,25 +6,23 @@ import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/model/SocialReactionModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/allFriends/AllFriendsScreen.dart';
-import 'package:flutter_social_network/ui/createPost/CreatePostScreen.dart';
-import 'package:flutter_social_network/ui/detailedPost/DetailedPostScreen.dart';
-import 'package:flutter_social_network/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:flutter_social_network/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
-import 'package:flutter_social_network/ui/notifications/NotificationsScreen.dart';
-import 'package:flutter_social_network/ui/profileSettings/ProfileSettingsScreen.dart';
-import 'package:flutter_social_network/ui/socialComments/SocialCommentsScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/model/SocialReactionModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/allFriends/AllFriendsScreen.dart';
+import 'package:link/ui/createPost/CreatePostScreen.dart';
+import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
+import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:link/ui/notifications/NotificationsScreen.dart';
+import 'package:link/ui/profileSettings/ProfileSettingsScreen.dart';
+import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -61,7 +59,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     _userPosts = _fireStoreUtils.getProfilePosts(user.userID);
     if (user.userID != MyAppState.currentUser!.userID)
-      _profileRelationFuture = _fireStoreUtils.getUserSocialRelation(user.userID);
+      _profileRelationFuture =
+          _fireStoreUtils.getUserSocialRelation(user.userID);
     _fireStoreUtils.getBlocks().listen((shouldRefresh) {
       if (shouldRefresh) {
         if (mounted) setState(() {});
@@ -82,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: widget.fromContainer
           ? null
           : AppBar(
-        title: Text('profile').tr(),
+              title: Text('profile').tr(),
               actions: [
                 if (user.userID == MyAppState.currentUser!.userID)
                   IconButton(
@@ -105,7 +104,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 alignment: Alignment.bottomCenter,
                 children: [
                   Center(
-                      child: displayCircleImage(user.profilePictureURL, 130, false)),
+                      child: displayCircleImage(
+                          user.profilePictureURL, 130, false)),
                   Visibility(
                     visible: user.userID == MyAppState.currentUser!.userID,
                     child: Positioned.directional(
@@ -116,7 +116,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           backgroundColor: Color(COLOR_ACCENT),
                           child: Icon(
                             CupertinoIcons.camera,
-                            color: isDarkMode(context) ? Colors.black : Colors.white,
+                            color: isDarkMode(context)
+                                ? Colors.black
+                                : Colors.white,
                           ),
                           mini: true,
                           onPressed: _onCameraClick),
@@ -132,8 +134,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   user.fullName(),
                   style: TextStyle(
-                      color:
-                          isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
+                      color: isDarkMode(context)
+                          ? Colors.grey.shade200
+                          : Colors.black,
                       fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
@@ -165,15 +168,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : FutureBuilder<String>(
                           future: _profileRelationFuture,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting)
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting)
                               return CircularProgressIndicator.adaptive();
                             _profileRelation = snapshot.data;
                             return Text(snapshot.data!);
                           },
                         ),
                   style: TextButton.styleFrom(
+                    foregroundColor: Color(COLOR_PRIMARY),
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    primary: Color(COLOR_PRIMARY),
                     backgroundColor: Color(COLOR_PRIMARY).withOpacity(0.1),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6),
@@ -187,7 +191,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 'friends',
                 style: TextStyle(
-                    color: isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
+                    color: isDarkMode(context)
+                        ? Colors.grey.shade200
+                        : Colors.black,
                     fontSize: 20),
               ).tr(),
             ),
@@ -230,8 +236,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: ConstrainedBox(
-                  constraints:
-                      BoxConstraints(minWidth: MediaQuery.of(context).size.width),
+                  constraints: BoxConstraints(
+                      minWidth: MediaQuery.of(context).size.width),
                   child: TextButton(
                     onPressed: () => push(
                         context,
@@ -240,9 +246,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         )),
                     child: Text('seeAllFriends').tr(),
                     style: TextButton.styleFrom(
+                      foregroundColor: isDarkMode(context)
+                          ? Colors.grey.shade200
+                          : Colors.black,
                       padding: EdgeInsets.symmetric(vertical: 12),
-                      primary:
-                          isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
                       backgroundColor: isDarkMode(context)
                           ? Colors.grey.shade200.withOpacity(0.1)
                           : Colors.black.withOpacity(0.1),
@@ -265,8 +272,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true))
                   return Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 32.0, vertical: 30),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 30),
                       child: Center(
                         child: showEmptyState(
                             'noPostsFound'.tr(),
@@ -276,10 +283,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .tr(args: ['${widget.user.firstName}']),
                             buttonTitle: 'createPost'.tr(),
                             isDarkMode: isDarkMode(context),
-                            action:
-                                widget.user.userID == MyAppState.currentUser!.userID
-                                    ? () => push(context, CreatePostScreen())
-                                    : null),
+                            action: widget.user.userID ==
+                                    MyAppState.currentUser!.userID
+                                ? () => push(context, CreatePostScreen())
+                                : null),
                       ));
 
                 return ListView.builder(
@@ -365,7 +372,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildFriendCard(User friend) {
     return GestureDetector(
-      onTap: () => push(context, ProfileScreen(user: friend, fromContainer: false)),
+      onTap: () =>
+          push(context, ProfileScreen(user: friend, fromContainer: false)),
       child: Card(
         shape: RoundedRectangleBorder(
           side: BorderSide.none,
@@ -432,8 +440,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       SizedBox(width: 8),
                       GestureDetector(
-                        onTap: () => push(context,
-                            ProfileScreen(user: post.author, fromContainer: false)),
+                        onTap: () => push(
+                            context,
+                            ProfileScreen(
+                                user: post.author, fromContainer: false)),
                         child: displayCircleImage(
                             post.author.profilePictureURL, 55, false),
                       ),
@@ -454,7 +464,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             Text(
                               setLastSeen(post.createdAt.seconds),
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 12),
                             ),
                             if (post.location.isNotEmpty ||
                                 post.location != 'Unknown Location')
@@ -491,20 +502,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     height: 150,
                                     decoration: BoxDecoration(
                                         color: Colors.black,
-                                        image:
-                                            post.postMedia[index].videoThumbnail !=
-                                                        null &&
-                                                    post.postMedia[index]
-                                                        .videoThumbnail!.isNotEmpty
-                                                ? DecorationImage(
-                                                    image: Image.network(post
-                                                            .postMedia[index]
-                                                            .videoThumbnail!)
-                                                        .image)
-                                                : null),
+                                        image: post.postMedia[index]
+                                                        .videoThumbnail !=
+                                                    null &&
+                                                post.postMedia[index]
+                                                    .videoThumbnail!.isNotEmpty
+                                            ? DecorationImage(
+                                                image: Image.network(post
+                                                        .postMedia[index]
+                                                        .videoThumbnail!)
+                                                    .image)
+                                            : null),
                                     child: Center(
                                       child: FloatingActionButton(
-                                        child: Icon(CupertinoIcons.play_arrow_solid),
+                                        child: Icon(
+                                            CupertinoIcons.play_arrow_solid),
                                         backgroundColor: Colors.white54,
                                         heroTag: post.id,
                                         onPressed: () => push(
@@ -568,6 +580,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           'assets/images/like.gif'),
                                       icon: buildIconFacebook(
                                           'assets/images/like_fill.png'),
+                                      value: null,
                                     );
                                     break;
                                   case 'love':
@@ -577,6 +590,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           'assets/images/love.gif'),
                                       icon: buildIconFacebook(
                                           'assets/images/love.png'),
+                                      value: null,
                                     );
                                     break;
                                   case 'surprised':
@@ -584,8 +598,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       id: 3,
                                       previewIcon: buildPreviewIconFacebook(
                                           'assets/images/wow.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/wow.png'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/wow.png'),
+                                      value: null,
                                     );
                                     break;
                                   case 'laugh':
@@ -595,6 +610,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           'assets/images/haha.gif'),
                                       icon: buildIconFacebook(
                                           'assets/images/haha.png'),
+                                      value: null,
                                     );
                                     break;
                                   case 'sad':
@@ -602,8 +618,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       id: 5,
                                       previewIcon: buildPreviewIconFacebook(
                                           'assets/images/sad.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/sad.png'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/sad.png'),
+                                      value: null,
                                     );
                                     break;
                                   case 'angry':
@@ -613,6 +630,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           'assets/images/angry.gif'),
                                       icon: buildIconFacebook(
                                           'assets/images/angry.png'),
+                                      value: null,
                                     );
                                     break;
                                   default:
@@ -622,6 +640,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           'assets/images/like.png'),
                                       icon: buildIconFacebook(
                                           'assets/images/like.png'),
+                                      value: null,
                                     );
                                     break;
                                 }
@@ -631,15 +650,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onReactionChanged: (reaction, index, isChecked) {
                                 setState(() {
                                   post.myReaction = Reaction(
-                                      id: reaction!.id,
+                                      value: reaction!.value,
                                       icon: reaction.icon,
                                       previewIcon: reaction.previewIcon);
                                 });
                                 if (isChecked) {
                                   bool isNewReaction = false;
-                                  SocialReactionModel? postReaction = _reactionsList
-                                      .firstWhere(
-                                          (element) => element?.postID == post.id,
+                                  SocialReactionModel? postReaction =
+                                      _reactionsList.firstWhere(
+                                          (element) =>
+                                              element?.postID == post.id,
                                           orElse: () {
                                     isNewReaction = true;
                                     String reactionString =
@@ -676,7 +696,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   _fireStoreUtils.removeReaction(post);
                                 }
                               },
-                              isChecked: post.myReaction.id != 0,
+                              isChecked: post.myReaction.value != 0,
                               reactions: facebookReactions,
                               initialReaction: Reaction(
                                   id: 0,
@@ -699,9 +719,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ? Colors.grey.shade200
                                           : null,
                                     ),
-                                  )),
-                              selectedReaction: post.myReaction.id != 0
-                                  ? facebookReactions[post.myReaction.id! - 1]
+                                  ),
+                                  value: null),
+                              selectedReaction: post.myReaction.value != 0
+                                  ? facebookReactions[post.myReaction.value - 1]
                                   : facebookReactions[0],
                             );
                           } else {
@@ -718,8 +739,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Icon(
                               CupertinoIcons.conversation_bubble,
                               size: 20,
-                              color:
-                                  isDarkMode(context) ? Colors.grey.shade200 : null,
+                              color: isDarkMode(context)
+                                  ? Colors.grey.shade200
+                                  : null,
                             ),
                             onTap: () => _showCommentsSheet(post)),
                       ),
@@ -781,11 +803,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               hideProgress();
               if (isSuccessful) {
                 Navigator.pop(context);
-                showAlertDialog(context, 'block'.tr(),
-                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']), false);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']),
+                    false);
               } else {
-                showAlertDialog(context, 'block'.tr(),
-                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']), false);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']),
+                    false);
               }
             },
           ),
@@ -803,13 +831,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'postHasBeenReported'.tr(args: ['${post.author.fullName()}']),
+                    'postHasBeenReported'
+                        .tr(args: ['${post.author.fullName()}']),
                     false);
               } else {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'couldnNotReportPost'.tr(args: ['${post.author.fullName()}']),
+                    'couldnNotReportPost'
+                        .tr(args: ['${post.author.fullName()}']),
                     false);
               }
             },

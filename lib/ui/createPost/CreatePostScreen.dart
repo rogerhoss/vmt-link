@@ -4,15 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:flutter_social_network/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,7 +48,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   child: Text(
                     'post',
                     style: TextStyle(
-                        color: Color(COLOR_PRIMARY), fontWeight: FontWeight.bold),
+                        color: Color(COLOR_PRIMARY),
+                        fontWeight: FontWeight.bold),
                   ).tr(),
                 ),
               ),
@@ -66,7 +67,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Color(COLOR_PRIMARY), width: 2)),
+                      border:
+                          Border.all(color: Color(COLOR_PRIMARY), width: 2)),
                   child: displayCircleImage(
                       MyAppState.currentUser!.profilePictureURL, 65, false),
                 ),
@@ -103,14 +105,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 setState(() {});
               },
               decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  enabledBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
+                  focusedBorder:
+                      OutlineInputBorder(borderSide: BorderSide.none),
                   hintText: 'whatIsOnYourMind'
                       .tr(args: ['${MyAppState.currentUser!.firstName}'])),
             ),
           ),
           Container(
-            padding: Platform.isIOS ? EdgeInsets.only(bottom: 40) : EdgeInsets.zero,
+            padding:
+                Platform.isIOS ? EdgeInsets.only(bottom: 40) : EdgeInsets.zero,
             color: isDarkMode(context) ? Colors.black54 : Colors.grey.shade200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,12 +159,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               context: context,
                               apiKey: GOOGLE_API_KEY,
                               mode: Mode.fullscreen,
-                              language:
-                                  EasyLocalization.of(context)?.locale.languageCode,
+                              language: EasyLocalization.of(context)
+                                  ?.locale
+                                  .languageCode,
                             );
                             if (p != null) {
-                              PlacesDetailsResponse placeData =
-                                  await _places.getDetailsByPlaceId(p.placeId ?? '');
+                              PlacesDetailsResponse placeData = await _places
+                                  .getDetailsByPlaceId(p.placeId ?? '');
                               _userLocation =
                                   placeData.result.formattedAddress ?? '';
                               setState(() {});
@@ -407,8 +413,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     hideProgress();
     _postController.clear();
     _mediaFiles.clear();
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('postPublishedSuccessfully').tr()));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('postPublishedSuccessfully').tr()));
     Navigator.pop(context);
   }
 

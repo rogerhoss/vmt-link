@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/helper.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/helper.dart';
 
 class PostModel {
   User author;
@@ -29,6 +29,7 @@ class PostModel {
     id: 0,
     previewIcon: buildPreviewIconFacebook('assets/images/like.png'),
     icon: buildIconFacebook('assets/images/like.png'),
+    value: null,
   );
 
   PostModel(

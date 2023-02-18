@@ -5,22 +5,20 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/ChatModel.dart';
-import 'package:flutter_social_network/model/ChatVideoContainer.dart';
-import 'package:flutter_social_network/model/ConversationModel.dart';
-import 'package:flutter_social_network/model/HomeConversationModel.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/chat/PlayerWidget.dart';
-import 'package:flutter_social_network/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:flutter_social_network/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/ChatModel.dart';
+import 'package:link/model/ChatVideoContainer.dart';
+import 'package:link/model/ConversationModel.dart';
+import 'package:link/model/HomeConversationModel.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/chat/PlayerWidget.dart';
+import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -66,8 +64,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   setupStream() {
-    chatStream =
-        _fireStoreUtils.getChatMessages(homeConversationModel).asBroadcastStream();
+    chatStream = _fireStoreUtils
+        .getChatMessages(homeConversationModel)
+        .asBroadcastStream();
     chatStream.listen((chatModel) {
       if (mounted) {
         homeConversationModel.members = chatModel.members;
@@ -96,7 +95,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   contentPadding: const EdgeInsets.all(0),
                   leading: Icon(
                     Icons.settings,
-                    color: isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
+                    color: isDarkMode(context)
+                        ? Colors.grey.shade200
+                        : Colors.black,
                   ),
                   title: Text(
                     'settings'.tr(),
@@ -117,13 +118,15 @@ class _ChatScreenState extends State<ChatScreen> {
             ? Text(
                 homeConversationModel.conversationModel?.name ?? '',
                 style: TextStyle(
-                    color: isDarkMode(context) ? Colors.grey.shade200 : Colors.white,
+                    color: isDarkMode(context)
+                        ? Colors.grey.shade200
+                        : Colors.white,
                     fontWeight: FontWeight.bold),
               )
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+                children: [
                   Text(
                     homeConversationModel.members.first.fullName(),
                     style: TextStyle(
@@ -159,7 +162,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             : null,
                         initialData: ChatModel(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Center(
                               child: CircularProgressIndicator.adaptive(),
                             );
@@ -171,7 +175,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               return ListView.builder(
                                   reverse: true,
                                   itemCount: snapshot.data!.message.length,
-                                  itemBuilder: (BuildContext context, int index) {
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
                                     return buildMessage(
                                         snapshot.data!.message[index],
                                         snapshot.data!.members);
@@ -194,7 +199,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       Expanded(
                           child: Padding(
-                              padding: const EdgeInsets.only(left: 2.0, right: 2),
+                              padding:
+                                  const EdgeInsets.only(left: 2.0, right: 2),
                               child: Container(
                                 padding: EdgeInsets.all(2),
                                 decoration: ShapeDecoration(
@@ -231,15 +237,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                                 RecordingState.HIDDEN;
                                           });
                                         },
-                                        textAlignVertical: TextAlignVertical.center,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
                                         controller: _messageController,
                                         decoration: InputDecoration(
                                           isDense: true,
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 8, horizontal: 8),
                                           hintText: 'startTyping'.tr(),
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey.shade400),
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade400),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(360),
@@ -310,10 +317,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       Expanded(
                         child: Visibility(
-                          visible: currentRecordingState == RecordingState.Recording,
+                          visible:
+                              currentRecordingState == RecordingState.Recording,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Color(COLOR_PRIMARY),
+                              backgroundColor: Color(COLOR_PRIMARY),
                               padding: EdgeInsets.only(top: 12, bottom: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.0),
@@ -334,10 +342,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       SizedBox(width: 15),
                       Expanded(
                         child: Visibility(
-                          visible: currentRecordingState == RecordingState.Recording,
+                          visible:
+                              currentRecordingState == RecordingState.Recording,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.grey.shade700,
+                              backgroundColor: Colors.grey.shade700,
                               padding: EdgeInsets.only(top: 12, bottom: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25.0),
@@ -363,7 +372,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       visible: currentRecordingState == RecordingState.VISIBLE,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.red,
+                          backgroundColor: Colors.red,
                           padding: EdgeInsets.only(top: 12, bottom: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.0),
@@ -396,7 +405,8 @@ class _ChatScreenState extends State<ChatScreen> {
         ? 'activeNow'.tr()
         : 'lastSeenOn'
             .tr(args: ['${setLastSeen(friend.lastOnlineTimestamp.seconds)}']);
-    return Text(text, style: TextStyle(fontSize: 15, color: Colors.grey.shade200));
+    return Text(text,
+        style: TextStyle(fontSize: 15, color: Colors.grey.shade200));
   }
 
   _onGroupChatSettingsClick() {
@@ -665,7 +675,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color: isDarkMode(context) ? Colors.black : Colors.white,
+                        color:
+                            isDarkMode(context) ? Colors.black : Colors.white,
                       ),
                     )
                   : Container(
@@ -801,8 +812,9 @@ class _ChatScreenState extends State<ChatScreen> {
               Directionality.of(context) == TextDirection.ltr
                   ? 'assets/images/chat_arrow_left.png'
                   : 'assets/images/chat_arrow_right.png',
-              color:
-                  isDarkMode(context) ? Colors.grey.shade600 : Colors.grey.shade300,
+              color: isDarkMode(context)
+                  ? Colors.grey.shade600
+                  : Colors.grey.shade300,
               height: 12,
             ),
           ),
@@ -887,7 +899,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                       child: Icon(
                         Icons.play_arrow,
-                        color: isDarkMode(context) ? Colors.black : Colors.white,
+                        color:
+                            isDarkMode(context) ? Colors.black : Colors.white,
                       ),
                     )
                   : Container(
@@ -911,8 +924,9 @@ class _ChatScreenState extends State<ChatScreen> {
               Directionality.of(context) == TextDirection.ltr
                   ? 'assets/images/chat_arrow_left.png'
                   : 'assets/images/chat_arrow_right.png',
-              color:
-                  isDarkMode(context) ? Colors.grey.shade600 : Colors.grey.shade300,
+              color: isDarkMode(context)
+                  ? Colors.grey.shade600
+                  : Colors.grey.shade300,
               height: 12,
             ),
           ),
@@ -942,7 +956,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           textAlign: TextAlign.start,
                           textDirection: TextDirection.ltr,
                           style: TextStyle(
-                            color: isDarkMode(context) ? Colors.white : Colors.black,
+                            color: isDarkMode(context)
+                                ? Colors.white
+                                : Colors.black,
                             fontSize: 16,
                           ),
                         ),
@@ -958,7 +974,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<Track> loadTrack(String trackUrl) async => Track(trackPath: trackUrl);
 
-  Future<bool> _checkChannelNullability(ConversationModel? conversationModel) async {
+  Future<bool> _checkChannelNullability(
+      ConversationModel? conversationModel) async {
     if (conversationModel != null) {
       return true;
     } else {
@@ -976,7 +993,8 @@ class _ChatScreenState extends State<ChatScreen> {
           id: channelID,
           lastMessageDate: Timestamp.now(),
           lastMessage: 'sentAMessage'.tr(args: ['${user.fullName()}']));
-      bool isSuccessful = await _fireStoreUtils.createConversation(conversation);
+      bool isSuccessful =
+          await _fireStoreUtils.createConversation(conversation);
       if (isSuccessful) {
         homeConversationModel.conversationModel = conversation;
         setupStream();
@@ -1021,19 +1039,22 @@ class _ChatScreenState extends State<ChatScreen> {
       message.content =
           'sentAVideo'.tr(args: ['${MyAppState.currentUser!.firstName}']);
     } else if (url.mime.contains('audio')) {
-      message.content =
-          'sentAVoiceMessage'.tr(args: ['${MyAppState.currentUser!.firstName}']);
+      message.content = 'sentAVoiceMessage'
+          .tr(args: ['${MyAppState.currentUser!.firstName}']);
     }
-    if (await _checkChannelNullability(homeConversationModel.conversationModel)) {
+    if (await _checkChannelNullability(
+        homeConversationModel.conversationModel)) {
       await _fireStoreUtils.sendMessage(
           homeConversationModel.members,
           homeConversationModel.isGroupChat,
           message,
           homeConversationModel.conversationModel!);
-      homeConversationModel.conversationModel!.lastMessageDate = Timestamp.now();
+      homeConversationModel.conversationModel!.lastMessageDate =
+          Timestamp.now();
       homeConversationModel.conversationModel!.lastMessage = message.content;
 
-      await _fireStoreUtils.updateChannel(homeConversationModel.conversationModel!);
+      await _fireStoreUtils
+          .updateChannel(homeConversationModel.conversationModel!);
     } else {
       showAlertDialog(
           context, 'anErrorOccurred'.tr(), 'failedToSendMessage'.tr(), true);
@@ -1057,8 +1078,8 @@ class _ChatScreenState extends State<ChatScreen> {
           height: 200,
           width: 350,
           child: Padding(
-              padding:
-                  const EdgeInsets.only(top: 40.0, left: 16, right: 16, bottom: 16),
+              padding: const EdgeInsets.only(
+                  top: 40.0, left: 16, right: 16, bottom: 16),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
@@ -1070,8 +1091,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
-                          borderSide:
-                              BorderSide(color: Color(COLOR_ACCENT), width: 2.0)),
+                          borderSide: BorderSide(
+                              color: Color(COLOR_ACCENT), width: 2.0)),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0)),
                       labelText: 'groupName'.tr(),
@@ -1094,10 +1115,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       TextButton(
                           onPressed: () async {
                             if (_groupNameController.text.isNotEmpty) {
-                              if (homeConversationModel.conversationModel!.name !=
+                              if (homeConversationModel
+                                      .conversationModel!.name !=
                                   _groupNameController.text) {
-                                showProgress(
-                                    context, 'renamingGroupPleaseWait'.tr(), false);
+                                showProgress(context,
+                                    'renamingGroupPleaseWait'.tr(), false);
                                 homeConversationModel.conversationModel!.name =
                                     _groupNameController.text.trim();
                                 await _fireStoreUtils.updateChannel(
@@ -1139,14 +1161,16 @@ class _ChatScreenState extends State<ChatScreen> {
               _showAlertDialog(
                   context,
                   'block'.tr(),
-                  'hasBeenBlocked.'.tr(
-                      args: ['${homeConversationModel.members.first.fullName()}']));
+                  'hasBeenBlocked.'.tr(args: [
+                    '${homeConversationModel.members.first.fullName()}'
+                  ]));
             } else {
               _showAlertDialog(
                   context,
                   'block'.tr(),
-                  'couldNotBlock'.tr(
-                      args: ['${homeConversationModel.members.first.fullName()}']));
+                  'couldNotBlock'.tr(args: [
+                    '${homeConversationModel.members.first.fullName()}'
+                  ]));
             }
           },
         ),
@@ -1163,14 +1187,16 @@ class _ChatScreenState extends State<ChatScreen> {
               _showAlertDialog(
                   context,
                   'report'.tr(),
-                  'hasBeenBlockedAndReported'.tr(
-                      args: ['${homeConversationModel.members.first.fullName()}']));
+                  'hasBeenBlockedAndReported'.tr(args: [
+                    '${homeConversationModel.members.first.fullName()}'
+                  ]));
             } else {
               _showAlertDialog(
                   context,
                   'report'.tr(),
-                  'couldNotReportAndBlock'.tr(
-                      args: ['${homeConversationModel.members.first.fullName()}']));
+                  'couldNotReportAndBlock'.tr(args: [
+                    '${homeConversationModel.members.first.fullName()}'
+                  ]));
             }
           },
         ),

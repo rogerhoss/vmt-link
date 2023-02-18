@@ -6,9 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:intl/intl.dart';
+import 'package:link/constants.dart';
+import 'package:link/model/PostModel.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:share/share.dart';
 
@@ -143,7 +142,8 @@ pushReplacement(BuildContext context, Widget destination) {
 }
 
 push(BuildContext context, Widget destination) {
-  Navigator.of(context).push(MaterialPageRoute(builder: (context) => destination));
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => destination));
 }
 
 pushAndRemoveUntil(BuildContext context, Widget destination, bool predict) {
@@ -180,7 +180,8 @@ Widget displayImage(String picUrl, double size) => CachedNetworkImage(
     errorWidget: (context, url, error) =>
         _getFlatPlaceholderOrErrorImage(size, false));
 
-Widget _getFlatPlaceholderOrErrorImage(double size, bool placeholder) => Container(
+Widget _getFlatPlaceholderOrErrorImage(double size, bool placeholder) =>
+    Container(
       width: placeholder ? 35 : size,
       height: placeholder ? 35 : size,
       child: placeholder
@@ -216,7 +217,8 @@ Widget displayCircleImage(String picUrl, double size, hasBorder) =>
         imageBuilder: (context, imageProvider) =>
             _getCircularImageProvider(imageProvider, size, false),
         imageUrl: picUrl,
-        placeholder: (context, url) => _getPlaceholderOrErrorImage(size, hasBorder),
+        placeholder: (context, url) =>
+            _getPlaceholderOrErrorImage(size, hasBorder),
         errorWidget: (context, url, error) =>
             _getPlaceholderOrErrorImage(size, hasBorder));
 
@@ -319,31 +321,37 @@ final facebookReactions = [
     id: 1,
     previewIcon: buildPreviewIconFacebook('assets/images/like.gif'),
     icon: buildIconFacebook('assets/images/like_fill.png'),
+    value: null,
   ),
   Reaction(
     id: 2,
     previewIcon: buildPreviewIconFacebook('assets/images/love.gif'),
     icon: buildIconFacebook('assets/images/love.png'),
+    value: null,
   ),
   Reaction(
     id: 3,
     previewIcon: buildPreviewIconFacebook('assets/images/wow.gif'),
     icon: buildIconFacebook('assets/images/wow.png'),
+    value: null,
   ),
   Reaction(
     id: 4,
     previewIcon: buildPreviewIconFacebook('assets/images/haha.gif'),
     icon: buildIconFacebook('assets/images/haha.png'),
+    value: null,
   ),
   Reaction(
     id: 5,
     previewIcon: buildPreviewIconFacebook('assets/images/sad.gif'),
     icon: buildIconFacebook('assets/images/sad.png'),
+    value: null,
   ),
   Reaction(
     id: 6,
     previewIcon: buildPreviewIconFacebook('assets/images/angry.gif'),
     icon: buildIconFacebook('assets/images/angry.png'),
+    value: null,
   ),
 ];
 
@@ -408,10 +416,10 @@ Widget showEmptyState(String title, String description,
             constraints: BoxConstraints(minWidth: double.infinity),
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  shape:
-                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  backgroundColor: Color(COLOR_PRIMARY),
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  primary: Color(COLOR_PRIMARY),
                 ),
                 child: Text(
                   buttonTitle!,

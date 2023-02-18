@@ -1,14 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/HomeConversationModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/chat/ChatScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/HomeConversationModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/chat/ChatScreen.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   @override
@@ -55,7 +54,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 width: 350,
                                 child: Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 40.0, left: 16, right: 16, bottom: 16),
+                                        top: 40.0,
+                                        left: 16,
+                                        right: 16,
+                                        bottom: 16),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       children: [
@@ -74,7 +76,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                                     width: 2.0)),
                                             border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(25.0)),
+                                                    BorderRadius.circular(
+                                                        25.0)),
                                             labelText: 'groupName'.tr(),
                                           ),
                                         ),
@@ -119,8 +122,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                                 child: Text('create',
                                                         style: TextStyle(
                                                             fontSize: 18,
-                                                            color:
-                                                                Color(COLOR_ACCENT)))
+                                                            color: Color(
+                                                                COLOR_ACCENT)))
                                                     .tr()),
                                           ],
                                         )
@@ -156,9 +159,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 120.0),
-                  child: showEmptyState(
-                      'noUsersFound'.tr(), 'registeredUsersWillShowUpHere.'.tr()),
+                  padding: const EdgeInsets.only(bottom: 120.0),
+                  child: showEmptyState('noUsersFound'.tr(),
+                      'registeredUsersWillShowUpHere.'.tr()),
                 )),
               );
             } else {

@@ -1,12 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/model/SocialCommentModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/profile/ProfileScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/model/SocialCommentModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/profile/ProfileScreen.dart';
 
 class SocialCommentsScreen extends StatefulWidget {
   final PostModel post;
@@ -63,7 +63,8 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
                       future: _commentsFuture,
                       initialData: [],
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Container(
                             child: Center(
                               child: CircularProgressIndicator(),
@@ -75,8 +76,8 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
                               child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Center(
-                                child: showEmptyState(
-                                    'noCommentsYet'.tr(), 'addANewCommentNow'.tr())),
+                                child: showEmptyState('noCommentsYet'.tr(),
+                                    'addANewCommentNow'.tr())),
                           ));
                         } else {
                           return GestureDetector(
@@ -86,7 +87,8 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
                               itemCount: snapshot.data!.length,
                               controller: controller,
                               itemBuilder: (context, index) {
-                                SocialCommentModel comment = snapshot.data![index];
+                                SocialCommentModel comment =
+                                    snapshot.data![index];
                                 return _commentWidget(comment);
                               },
                               shrinkWrap: true,
@@ -106,8 +108,8 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
                           children: [
                             Expanded(
                                 child: Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 2.0, right: 2),
+                                    padding: const EdgeInsets.only(
+                                        left: 2.0, right: 2),
                                     child: Container(
                                       padding: EdgeInsets.all(2),
                                       decoration: ShapeDecoration(
@@ -126,15 +128,16 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
                                         onChanged: (s) {
                                           setState(() {});
                                         },
-                                        textAlignVertical: TextAlignVertical.center,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
                                         controller: _commentController,
                                         decoration: InputDecoration(
                                           isDense: true,
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 8, horizontal: 8),
                                           hintText: 'addCommentToThisPost'.tr(),
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey.shade400),
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey.shade400),
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(360),
@@ -198,7 +201,8 @@ class _SocialCommentsScreenState extends State<SocialCommentsScreen> {
             );
           } else {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
               child: Row(
                 children: [
                   GestureDetector(

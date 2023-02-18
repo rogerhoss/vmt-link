@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/model/StoryModel.dart';
-import 'package:story_view/controller/story_controller.dart';
+import 'package:link/constants.dart';
+import 'package:link/model/StoryModel.dart';
 import 'package:story_view/story_view.dart';
-import 'package:story_view/widgets/story_view.dart';
 
 class StoryPage extends StatefulWidget {
   final List<StoryModel> stories;

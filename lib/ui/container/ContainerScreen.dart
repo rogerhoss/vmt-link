@@ -3,19 +3,19 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/conversationsScreen/ConversationsScreen.dart';
-import 'package:flutter_social_network/ui/createGroup/CreateGroupScreen.dart';
-import 'package:flutter_social_network/ui/createPost/CreatePostScreen.dart';
-import 'package:flutter_social_network/ui/discover/DiscoverScreen.dart';
-import 'package:flutter_social_network/ui/friends/FriendsScreen.dart';
-import 'package:flutter_social_network/ui/home/HomeScreen.dart';
-import 'package:flutter_social_network/ui/notifications/NotificationsScreen.dart';
-import 'package:flutter_social_network/ui/postStory/PostStoryScreen.dart';
-import 'package:flutter_social_network/ui/profile/ProfileScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/conversationsScreen/ConversationsScreen.dart';
+import 'package:link/ui/createGroup/CreateGroupScreen.dart';
+import 'package:link/ui/createPost/CreatePostScreen.dart';
+import 'package:link/ui/discover/DiscoverScreen.dart';
+import 'package:link/ui/friends/FriendsScreen.dart';
+import 'package:link/ui/home/HomeScreen.dart';
+import 'package:link/ui/notifications/NotificationsScreen.dart';
+import 'package:link/ui/postStory/PostStoryScreen.dart';
+import 'package:link/ui/profile/ProfileScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -125,12 +125,14 @@ class _ContainerScreen extends State<ContainerScreen> {
                   BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.home), label: 'feed'.tr()),
                   BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.search), label: 'discover'.tr()),
+                      icon: Icon(CupertinoIcons.search),
+                      label: 'discover'.tr()),
                   BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.conversation_bubble),
                       label: 'chat'.tr()),
                   BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.person_2), label: 'friends'.tr()),
+                      icon: Icon(CupertinoIcons.person_2),
+                      label: 'friends'.tr()),
                   BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.person), label: 'profile'.tr()),
                 ]),
@@ -157,8 +159,9 @@ class _ContainerScreen extends State<ContainerScreen> {
                       'assets/images/create_post_img.png',
                       width: 24,
                       height: 24,
-                      color:
-                          isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
+                      color: isDarkMode(context)
+                          ? Colors.grey.shade200
+                          : Colors.black,
                     ),
                     onPressed: () => push(context, CreatePostScreen()),
                   ),
@@ -169,8 +172,9 @@ class _ContainerScreen extends State<ContainerScreen> {
                       'assets/images/create_post_img.png',
                       width: 24,
                       height: 24,
-                      color:
-                          isDarkMode(context) ? Colors.grey.shade200 : Colors.black,
+                      color: isDarkMode(context)
+                          ? Colors.grey.shade200
+                          : Colors.black,
                     ),
                     onPressed: () => push(context, CreateGroupScreen()),
                   ),

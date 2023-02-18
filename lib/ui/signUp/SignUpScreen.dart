@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/container/ContainerScreen.dart';
-import 'package:flutter_social_network/ui/phoneAuth/PhoneNumberInputScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/container/ContainerScreen.dart';
+import 'package:link/ui/phoneAuth/PhoneNumberInputScreen.dart';
 import 'package:image_picker/image_picker.dart';
 
 File? _image;
@@ -198,11 +197,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -238,11 +239,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -279,11 +282,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -320,11 +325,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -363,11 +370,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -407,11 +416,13 @@ class _SignUpState extends State<SignUpScreen> {
                     borderSide:
                         BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderSide:
+                      BorderSide(color: Theme.of(context).colorScheme.error),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 enabledBorder: OutlineInputBorder(
@@ -436,7 +447,7 @@ class _SignUpState extends State<SignUpScreen> {
             constraints: const BoxConstraints(minWidth: double.infinity),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color(COLOR_PRIMARY),
+                backgroundColor: Color(COLOR_PRIMARY),
                 padding: EdgeInsets.only(top: 12, bottom: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25.0),

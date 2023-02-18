@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 class FullScreenVideoViewer extends StatefulWidget {
@@ -37,10 +38,10 @@ class _FullScreenVideoViewerState extends State<FullScreenVideoViewer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.dark,
         elevation: 0.0,
         backgroundColor: Colors.black,
         iconTheme: IconThemeData(color: Colors.white),
+        systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       body: Container(
           color: Colors.black,
@@ -59,7 +60,9 @@ class _FullScreenVideoViewerState extends State<FullScreenVideoViewer> {
         heroTag: widget.heroTag,
         onPressed: () {
           setState(() {
-            _controller.value.isPlaying ? _controller.pause() : _controller.play();
+            _controller.value.isPlaying
+                ? _controller.pause()
+                : _controller.play();
           });
         },
         child: Icon(

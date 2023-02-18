@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.instamobile.flutter.social_network.flutter_social_network">
+    package="io.instamobile.flutter.social_network.link">
 
 
     <uses-feature android:name="android.hardware.camera" />
@@ -32,7 +32,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round">
         <activity
-            android:name="io.instamobile.flutter.social_network.flutter_social_network.MainActivity"
+            android:name="io.instamobile.flutter.social_network.link.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"

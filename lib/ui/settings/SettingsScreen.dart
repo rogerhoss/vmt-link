@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   final User user;
@@ -54,7 +53,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Material(
                       elevation: 2,
-                      color: isDarkMode(context) ? Colors.black12 : Colors.white,
+                      color:
+                          isDarkMode(context) ? Colors.black12 : Colors.white,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,10 +81,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top: 32.0, bottom: 16),
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(minWidth: double.infinity),
+                        constraints:
+                            const BoxConstraints(minWidth: double.infinity),
                         child: Material(
                           elevation: 2,
-                          color: isDarkMode(context) ? Colors.black12 : Colors.white,
+                          color: isDarkMode(context)
+                              ? Colors.black12
+                              : Colors.white,
                           child: CupertinoButton(
                             padding: const EdgeInsets.all(12.0),
                             onPressed: () async {
@@ -110,8 +113,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               style: TextStyle(
                                   fontSize: 18, color: Color(COLOR_PRIMARY)),
                             ).tr(),
-                            color:
-                                isDarkMode(context) ? Colors.black12 : Colors.white,
+                            color: isDarkMode(context)
+                                ? Colors.black12
+                                : Colors.white,
                           ),
                         ),
                       ),

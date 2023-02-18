@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/auth/AuthScreen.dart';
+import 'package:link/constants.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/auth/AuthScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -20,11 +20,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     easyLocal.tr('onBoardingTitle1'),
     'onBoardingTitle2'.tr(),
     'onBoardingTitle3'.tr(),
-    'onBoardingTitle4'.tr(),
-    'onBoardingTitle5'.tr(),
-    'onBoardingTitle6'.tr(),
-    'onBoardingTitle7'.tr(),
-    'onBoardingTitle8'.tr()
+
+    /// 'onBoardingTitle4'.tr(),
+    /// 'onBoardingTitle5'.tr(),
+    /// 'onBoardingTitle6'.tr(),
+    /// 'onBoardingTitle7'.tr(),
+    /// 'onBoardingTitle8'.tr()
   ];
 
   /// list of strings containing onboarding subtitles, the samll text under the
@@ -33,23 +34,24 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     'onBoardingSubtitle1'.tr(),
     'onBoardingSubtitle2'.tr(),
     'onBoardingSubtitle3'.tr(),
-    'onBoardingSubtitle4'.tr(),
-    'onBoardingSubtitle5'.tr(),
-    'onBoardingSubtitle6'.tr(),
-    'onBoardingSubtitle7'.tr(),
-    'onBoardingSubtitle8'.tr()
+
+    /// 'onBoardingSubtitle4'.tr(),
+    /// 'onBoardingSubtitle5'.tr(),
+    /// 'onBoardingSubtitle6'.tr(),
+    /// 'onBoardingSubtitle7'.tr(),
+    /// 'onBoardingSubtitle8'.tr()
   ];
 
   /// list containing image paths or IconData representing the image of each page
   final List<dynamic> _imageList = [
-    'assets/images/create_post_img.png',
-    CupertinoIcons.camera,
-    CupertinoIcons.location,
-    CupertinoIcons.hand_thumbsup,
-    CupertinoIcons.chat_bubble,
-    CupertinoIcons.person_2,
-    CupertinoIcons.camera_circle,
-    CupertinoIcons.bell
+    CupertinoIcons.rocket,
+    CupertinoIcons.group,
+    CupertinoIcons.calendar,
+
+    /// CupertinoIcons.chat_bubble,
+    /// CupertinoIcons.person_2,
+    /// CupertinoIcons.camera_circle,
+    /// CupertinoIcons.bell
   ];
 
   int _currentIndex = 0;
@@ -122,8 +124,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  Widget getPage(dynamic image, String title, String subTitle, BuildContext context,
-      bool isLastPage) {
+  Widget getPage(dynamic image, String title, String subTitle,
+      BuildContext context, bool isLastPage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

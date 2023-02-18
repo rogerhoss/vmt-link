@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
@@ -82,7 +82,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
           padding: const EdgeInsets.only(top: 12.0),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Color(COLOR_PRIMARY),
+              backgroundColor: Color(COLOR_PRIMARY),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(12),
@@ -121,7 +121,7 @@ class _ReAuthUserScreenState extends State<ReAuthUserScreen> {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        primary: Color(FACEBOOK_BUTTON_COLOR),
+        backgroundColor: Color(FACEBOOK_BUTTON_COLOR),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
           side: BorderSide(

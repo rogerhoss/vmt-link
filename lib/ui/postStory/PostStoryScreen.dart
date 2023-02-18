@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:video_player/video_player.dart';
 
@@ -12,7 +12,8 @@ class PostStoryScreen extends StatefulWidget {
   final File storyFile;
   final String storyType;
 
-  const PostStoryScreen({Key? key, required this.storyFile, required this.storyType})
+  const PostStoryScreen(
+      {Key? key, required this.storyFile, required this.storyType})
       : super(key: key);
 
   @override
@@ -95,12 +96,13 @@ class _PostStoryScreenState extends State<PostStoryScreen> {
               end: 16,
               child: TextButton(
                   style: TextButton.styleFrom(
-                    shape: StadiumBorder(),
-                    primary: isDarkMode(context)
+                    foregroundColor: isDarkMode(context)
                         ? Colors.grey.shade700
                         : Colors.grey.shade300,
+                    shape: StadiumBorder(),
                   ),
-                  onPressed: () => _postStory(widget.storyFile, widget.storyType),
+                  onPressed: () =>
+                      _postStory(widget.storyFile, widget.storyType),
                   child: Text('post').tr()))
         ],
       ),

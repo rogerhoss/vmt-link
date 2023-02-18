@@ -7,23 +7,23 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/main.dart';
-import 'package:flutter_social_network/model/MessageData.dart';
-import 'package:flutter_social_network/model/PostModel.dart';
-import 'package:flutter_social_network/model/SocialReactionModel.dart';
-import 'package:flutter_social_network/model/StoryModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/createPost/CreatePostScreen.dart';
-import 'package:flutter_social_network/ui/detailedPost/DetailedPostScreen.dart';
-import 'package:flutter_social_network/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:flutter_social_network/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
-import 'package:flutter_social_network/ui/postStory/PostStoryScreen.dart';
-import 'package:flutter_social_network/ui/profile/ProfileScreen.dart';
-import 'package:flutter_social_network/ui/socialComments/SocialCommentsScreen.dart';
-import 'package:flutter_social_network/ui/storyPage/StoryPage.dart';
+import 'package:link/constants.dart';
+import 'package:link/main.dart';
+import 'package:link/model/MessageData.dart';
+import 'package:link/model/PostModel.dart';
+import 'package:link/model/SocialReactionModel.dart';
+import 'package:link/model/StoryModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/createPost/CreatePostScreen.dart';
+import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
+import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:link/ui/postStory/PostStoryScreen.dart';
+import 'package:link/ui/profile/ProfileScreen.dart';
+import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
+import 'package:link/ui/storyPage/StoryPage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -46,7 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _storiesStream = fireStoreUtils.getUserStories(MyAppState.currentUser!.userID);
+    _storiesStream =
+        fireStoreUtils.getUserStories(MyAppState.currentUser!.userID);
     _myReactions = fireStoreUtils.getMyReactions()
       ..then((value) {
         _reactionsList.addAll(value);
@@ -103,7 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   return SizedBox(
                       height: 100,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 4, right: 4),
+                        padding:
+                            const EdgeInsets.only(top: 8.0, left: 4, right: 4),
                         child: InkWell(
                           onTap: () => _showStoryMenu(),
                           child: Column(
@@ -146,13 +148,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.builder(
                     itemCount: snapshot.hasData ? stories.length : 0,
                     itemBuilder: (context, index) {
-                      List<StoryModel> userStories = stories.values.toList()[index];
+                      List<StoryModel> userStories =
+                          stories.values.toList()[index];
                       User friend = stories.values.toList()[index].first.author;
                       if (friend.userID == MyAppState.currentUser!.userID)
                         userStories
                             .sort((a, b) => a.createdAt.compareTo(b.createdAt));
                       return Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 4, right: 4),
+                        padding:
+                            const EdgeInsets.only(top: 8.0, left: 4, right: 4),
                         child: InkWell(
                           onTap: () {
                             push(context, StoryPage(stories: userStories));
@@ -175,7 +179,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     padding: const EdgeInsets.only(
                                         top: 8.0, left: 8, right: 8),
                                     child: Text(
-                                      friend.userID == MyAppState.currentUser!.userID
+                                      friend.userID ==
+                                              MyAppState.currentUser!.userID
                                           ? 'My Story'.tr()
                                           : '${friend.firstName}',
                                       style: TextStyle(color: Colors.grey),
@@ -261,8 +266,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       SizedBox(width: 8),
                       GestureDetector(
-                        onTap: () => push(context,
-                            ProfileScreen(user: post.author, fromContainer: false)),
+                        onTap: () => push(
+                            context,
+                            ProfileScreen(
+                                user: post.author, fromContainer: false)),
                         child: displayCircleImage(
                             post.author.profilePictureURL, 55, false),
                       ),
@@ -283,7 +290,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Text(
                                 setLastSeen(post.createdAt.seconds),
-                                style: TextStyle(color: Colors.grey, fontSize: 12),
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 12),
                               ),
                               if (post.location.isNotEmpty ||
                                   post.location != 'Unknown Location')
@@ -319,21 +327,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                       height: 150,
                                       decoration: BoxDecoration(
                                           color: Colors.black,
-                                          image:
-                                              post.postMedia[index].videoThumbnail !=
-                                                          null &&
-                                                      post.postMedia[index]
-                                                          .videoThumbnail!.isNotEmpty
-                                                  ? DecorationImage(
-                                                      image: Image.network(post
-                                                              .postMedia[index]
-                                                              .videoThumbnail!)
-                                                          .image)
-                                                  : null),
+                                          image: post.postMedia[index]
+                                                          .videoThumbnail !=
+                                                      null &&
+                                                  post
+                                                      .postMedia[index]
+                                                      .videoThumbnail!
+                                                      .isNotEmpty
+                                              ? DecorationImage(
+                                                  image: Image.network(post
+                                                          .postMedia[index]
+                                                          .videoThumbnail!)
+                                                      .image)
+                                              : null),
                                       child: Center(
                                         child: FloatingActionButton(
-                                          child:
-                                              Icon(CupertinoIcons.play_arrow_solid),
+                                          child: Icon(
+                                              CupertinoIcons.play_arrow_solid),
                                           backgroundColor: Colors.white54,
                                           heroTag: post.id,
                                           onPressed: () => push(
@@ -383,102 +393,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             SocialReactionModel? _postReaction;
-
                             if (snapshot.data!.isNotEmpty) {
                               _postReaction = _reactionsList.firstWhereOrNull(
                                   (element) => element?.postID == post.id);
                               if (_postReaction != null) {
-                                switch (_postReaction.reaction) {
-                                  case 'like':
-                                    post.myReaction = Reaction(
-                                      id: 1,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like_fill.png'),
-                                    );
-                                    break;
-                                  case 'love':
-                                    post.myReaction = Reaction(
-                                      id: 2,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/love.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/love.png'),
-                                    );
-                                    break;
-                                  case 'surprised':
-                                    post.myReaction = Reaction(
-                                      id: 3,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/wow.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/wow.png'),
-                                    );
-                                    break;
-                                  case 'laugh':
-                                    post.myReaction = Reaction(
-                                      id: 4,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/haha.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/haha.png'),
-                                    );
-                                    break;
-                                  case 'sad':
-                                    post.myReaction = Reaction(
-                                      id: 5,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/sad.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/sad.png'),
-                                    );
-                                    break;
-                                  case 'angry':
-                                    post.myReaction = Reaction(
-                                      id: 6,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/angry.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/angry.png'),
-                                    );
-                                    break;
-                                  default:
-                                    post.myReaction = Reaction(
-                                      id: 0,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.png'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like.png'),
-                                    );
-                                    break;
-                                }
+                                post.myReaction = getReaction(_postReaction.reaction);
                               }
                             }
-                            return FlutterReactionButtonCheck(
-                              onReactionChanged: (reaction, index, isChecked) {
+                            return FlutterReactionButton(
+                              onReactionChanged: (reaction, isChecked) {
                                 setState(() {
-                                  post.myReaction = Reaction(
-                                      id: reaction!.id,
-                                      icon: reaction.icon,
-                                      previewIcon: reaction.previewIcon);
+                                  post.myReaction = reaction;
                                 });
                                 if (isChecked) {
                                   bool isNewReaction = false;
-                                  SocialReactionModel? postReaction = _reactionsList
-                                      .firstWhere(
+                                  SocialReactionModel? postReaction =
+                                      _reactionsList.firstWhere(
                                           (element) => element?.postID == post.id,
                                           orElse: () {
                                     isNewReaction = true;
-                                    String reactionString =
-                                        getReactionString(reaction!.id!);
-                                    SocialReactionModel newReaction =
-                                        SocialReactionModel(
-                                            postID: post.id,
-                                            createdAt: Timestamp.now(),
-                                            reactionAuthorID:
-                                                MyAppState.currentUser!.userID,
-                                            reaction: reactionString);
+                                    String reactionString = reactionStringFromId(reaction!.id!);
+                                    SocialReactionModel newReaction = SocialReactionModel(
+                                        postID: post.id,
+                                        createdAt: Timestamp.now(),
+                                        reactionAuthorID: MyAppState.currentUser!.userID,
+                                        reaction: reactionString);
                                     _reactionsList.add(newReaction);
                                     return newReaction;
                                   });
@@ -488,11 +427,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     });
                                     fireStoreUtils.postReaction(postReaction!, post);
                                   } else {
-                                    postReaction!.reaction =
-                                        getReactionString(reaction!.id!);
+                                    postReaction!.reaction = reactionStringFromId(reaction!.id!);
                                     postReaction.createdAt = Timestamp.now();
-                                    fireStoreUtils.updateReaction(
-                                        postReaction, post);
+                                    fireStoreUtils.updateReaction(postReaction, post);
                                   }
                                 } else {
                                   _reactionsList.removeWhere(
@@ -503,33 +440,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fireStoreUtils.removeReaction(post);
                                 }
                               },
-                              isChecked: post.myReaction.id != 0,
                               reactions: facebookReactions,
                               initialReaction: Reaction(
                                   id: 0,
-                                  previewIcon: Container(
-                                    color: Colors.transparent,
-                                    child: Image.asset(
-                                      'assets/images/like.png',
-                                      height: 20,
-                                      color: isDarkMode(context)
-                                          ? Colors.grey.shade200
-                                          : null,
-                                    ),
-                                  ),
                                   icon: Container(
                                     color: Colors.transparent,
-                                    child: Image.asset(
-                                      'assets/images/like.png',
-                                      height: 20,
-                                      color: isDarkMode(context)
-                                          ? Colors.grey.shade200
-                                          : null,
-                                    ),
+                                    child: Icon(Icons.thumb_up_outlined,
+                                        color: isDarkMode(context)
+                                            ? Colors.grey.shade200
+                                            : null),
                                   )),
-                              selectedReaction: post.myReaction.id != 0
-                                  ? facebookReactions[post.myReaction.id! - 1]
-                                  : facebookReactions[0],
+                              selectedReaction: post.myReaction,
+                              boxColor: Colors.grey.shade100,
                             );
                           } else {
                             return Container();
@@ -545,16 +467,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               CupertinoIcons.conversation_bubble,
                               size: 20,
-                              color:
-                                  isDarkMode(context) ? Colors.grey.shade200 : null,
+                              color: isDarkMode(context) ? Colors.grey.shade200 : null,
                             ),
                             onTap: () => _showCommentsSheet(post)),
                       ),
-                      if (post.commentCount.round() != 0)
-                        Text('${post.commentCount.round()}'),
+                      if (post.commentCount.round() != 0) Text('${post.commentCount.round()}'),
                     ],
-                  ),
-                ],
+                  );
+               ],
               ),
               Positioned.directional(
                 textDirection: Directionality.of(context),
@@ -606,11 +526,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   await fireStoreUtils.blockUser(post.author, 'block');
               hideProgress();
               if (isSuccessful) {
-                showAlertDialog(context, 'block'.tr(),
-                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']), true);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']),
+                    true);
               } else {
-                showAlertDialog(context, 'block'.tr(),
-                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']), true);
+                showAlertDialog(
+                    context,
+                    'block'.tr(),
+                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']),
+                    true);
               }
             },
           ),
@@ -627,13 +553,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'postHasBeenReported'.tr(args: ['${post.author.fullName()}']),
+                    'postHasBeenReported'
+                        .tr(args: ['${post.author.fullName()}']),
                     true);
               } else {
                 showAlertDialog(
                     context,
                     'report'.tr(),
-                    'couldnNotReportPost'.tr(args: ['${post.author.fullName()}']),
+                    'couldnNotReportPost'
+                        .tr(args: ['${post.author.fullName()}']),
                     true);
               }
             },

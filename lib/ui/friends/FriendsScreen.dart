@@ -1,16 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_social_network/model/ContactModel.dart';
-import 'package:flutter_social_network/model/ConversationModel.dart';
-import 'package:flutter_social_network/model/HomeConversationModel.dart';
-import 'package:flutter_social_network/model/User.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
-import 'package:flutter_social_network/ui/chat/ChatScreen.dart';
-import 'package:flutter_social_network/ui/profile/ProfileScreen.dart';
-import 'package:flutter_social_network/ui/searchScreen/SearchScreen.dart';
+import 'package:link/model/ContactModel.dart';
+import 'package:link/model/ConversationModel.dart';
+import 'package:link/model/HomeConversationModel.dart';
+import 'package:link/model/User.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
+import 'package:link/ui/chat/ChatScreen.dart';
+import 'package:link/ui/profile/ProfileScreen.dart';
+import 'package:link/ui/searchScreen/SearchScreen.dart';
 
 List<ContactModel> _contacts = [];
 
@@ -116,7 +115,8 @@ class _ContactsScreenState extends State<FriendsScreen> {
                           channelID = user.userID + contact.user.userID;
                         }
                         ConversationModel? conversationModel =
-                            await fireStoreUtils.getChannelByIdOrNull(channelID);
+                            await fireStoreUtils
+                                .getChannelByIdOrNull(channelID);
                         push(
                           context,
                           ChatScreen(
@@ -140,18 +140,20 @@ class _ContactsScreenState extends State<FriendsScreen> {
                       title: Text(
                         '${contact.user.fullName()}',
                         style: TextStyle(
-                            color: isDarkMode(context) ? Colors.white : Colors.black,
+                            color: isDarkMode(context)
+                                ? Colors.white
+                                : Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 15),
                       ),
                       trailing: TextButton(
                         style: TextButton.styleFrom(
+                          foregroundColor: isDarkMode(context)
+                              ? Colors.grey.shade700
+                              : Colors.grey.shade200,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          primary: isDarkMode(context)
-                              ? Colors.grey.shade700
-                              : Colors.grey.shade200,
                         ),
                         onPressed: () async {
                           await _onContactButtonClicked(contact, index, false);
@@ -161,8 +163,9 @@ class _ContactsScreenState extends State<FriendsScreen> {
                         child: Text(
                           getStatusByType(contact.type),
                           style: TextStyle(
-                              color:
-                                  isDarkMode(context) ? Colors.white : Colors.black,
+                              color: isDarkMode(context)
+                                  ? Colors.white
+                                  : Colors.black,
                               fontWeight: FontWeight.bold),
                         ).tr(),
                       ),
@@ -194,7 +197,8 @@ class _ContactsScreenState extends State<FriendsScreen> {
     }
   }
 
-  _onContactButtonClicked(ContactModel contact, int index, bool fromSearch) async {
+  _onContactButtonClicked(
+      ContactModel contact, int index, bool fromSearch) async {
     switch (contact.type) {
       case ContactType.ACCEPT:
         showProgress(context, 'acceptingFriendship'.tr(), false);

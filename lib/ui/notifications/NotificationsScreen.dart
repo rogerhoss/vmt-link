@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_network/constants.dart';
-import 'package:flutter_social_network/model/NotificationModel.dart';
-import 'package:flutter_social_network/services/FirebaseHelper.dart';
-import 'package:flutter_social_network/services/helper.dart';
+import 'package:link/constants.dart';
+import 'package:link/model/NotificationModel.dart';
+import 'package:link/services/FirebaseHelper.dart';
+import 'package:link/services/helper.dart';
 
 class NotificationsScreen extends StatefulWidget {
   @override
@@ -69,7 +69,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               snapshot.data![index].metadata['fromUser'];
                           break;
                         case 'accept_friend':
-                          notificationBody = 'justAcceptedYourFriendRequest'.tr();
+                          notificationBody =
+                              'justAcceptedYourFriendRequest'.tr();
                           notificationMetaData =
                               snapshot.data![index].metadata['fromUser'];
                           break;
@@ -120,7 +121,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         leading: notificationMetaData != null
                             ? snapshot.data![index].type != 'chat_message'
                                 ? displayCircleImage(
-                            notificationMetaData['profilePictureURL'] ?? '',
+                                    notificationMetaData['profilePictureURL'] ??
+                                        '',
                                     40,
                                     true)
                                 : Icon(CupertinoIcons.chat_bubble_fill,

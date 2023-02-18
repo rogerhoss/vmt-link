@@ -1,4 +1,4 @@
-import 'package:flutter_social_network/model/ConversationModel.dart';
+import 'package:link/model/ConversationModel.dart';
 
 import 'User.dart';
 
@@ -10,5 +10,7 @@ class HomeConversationModel {
   ConversationModel? conversationModel;
 
   HomeConversationModel(
-      {this.isGroupChat = false, this.members = const [], this.conversationModel});
+      {this.isGroupChat = false,
+      this.members = const [],
+      this.conversationModel});
 }

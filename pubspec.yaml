@@ -1,4 +1,4 @@
-name: flutter_social_network
+name: link
 description: The Venture Mentoring Team
 publish_to: 'none'
 version: 1.0.0+1
@@ -9,6 +9,7 @@ dependencies:
   firebase_core: ^2.5.0
   firebase_auth: ^4.2.6
   cloud_firestore: ^4.3.2
+  easy_localization: ^3.0.0
   image_picker: ^0.8.3+2
   firebase_storage: ^11.0.11
   progress_dialog:
@@ -30,11 +31,9 @@ dependencies:
   intl_phone_number_input: ^0.7.0+2
   pin_code_fields: ^7.3.0
   story_view: ^0.13.1
-  flutter_reaction_button: ^1.0.8
-  flutter_google_places: ^0.3.0
+  flutter_reaction_button: ^2.0.1+2
   google_maps_webservice: ^0.0.20-nullsafety.5
   share: ^2.0.4
-  easy_localization: ^3.0.0
   flutter_native_image: ^0.0.6+1
   video_compress: ^3.1.0
   flutter_sound: ^8.3.9
@@ -43,11 +42,7 @@ dependencies:
     sdk: flutter
   the_apple_sign_in: ^1.1.1
   cupertino_icons: ^1.0.3
-dependency_overrides:
-  flutter_google_places:
-    git:
-      url: https://github.com/hoc081098/flutter_google_places.git
-      ref: 7b6c2aa2053131142c0e48639823d24f312d00c1
+  flutter_google_places_hoc081098: ^1.2.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.11.0
