@@ -146,7 +146,7 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        title: 'appName', // .tr()
+        title: 'appName'.tr(),
         theme: ThemeData(
             appBarTheme: AppBarTheme(
                 centerTitle: true,
@@ -161,17 +161,13 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                             letterSpacing: 0,
                             fontWeight: FontWeight.w700))
                     .bodyMedium,
-                titleTextStyle: TextTheme(
-                        titleLarge: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17.0,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w700))
-                    .titleLarge,
+                titleTextStyle:
+                    TextTheme(titleLarge: TextStyle(color: Colors.black, fontSize: 17.0, letterSpacing: 0, fontWeight: FontWeight.w700))
+                        .titleLarge,
                 systemOverlayStyle: SystemUiOverlayStyle.dark),
             bottomSheetTheme: BottomSheetThemeData(
                 backgroundColor: Colors.white.withOpacity(.9)),
-            brightness: Brightness.light,
+            // brightness: Brightness.light,
             colorScheme: ColorScheme.fromSwatch()
                 .copyWith(secondary: Color(COLOR_PRIMARY))),
         darkTheme: ThemeData(
@@ -182,10 +178,17 @@ class MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 actionsIconTheme: IconThemeData(color: Color(COLOR_PRIMARY)),
                 iconTheme: IconThemeData(color: Color(COLOR_PRIMARY)),
                 systemOverlayStyle: SystemUiOverlayStyle.light,
-                toolbarTextStyle: TextTheme(titleLarge: TextStyle(color: Colors.grey.shade200, fontSize: 17.0, letterSpacing: 0, fontWeight: FontWeight.w700)).bodyMedium,
-                titleTextStyle: TextTheme(titleLarge: TextStyle(color: Colors.grey.shade200, fontSize: 17.0, letterSpacing: 0, fontWeight: FontWeight.w700)).titleLarge),
+                toolbarTextStyle: TextTheme(
+                        titleLarge: TextStyle(
+                            color: Colors.grey.shade200,
+                            fontSize: 17.0,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w700))
+                    .bodyMedium,
+                titleTextStyle:
+                    TextTheme(titleLarge: TextStyle(color: Colors.grey.shade200, fontSize: 17.0, letterSpacing: 0, fontWeight: FontWeight.w700)).titleLarge),
             bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.black12.withOpacity(.3)),
-            brightness: Brightness.dark,
+            // brightness: Brightness.dark,
             colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(COLOR_PRIMARY))),
         debugShowCheckedModeBanner: false,
         color: Color(COLOR_PRIMARY),

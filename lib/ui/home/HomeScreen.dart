@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -393,69 +393,82 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             SocialReactionModel? _postReaction;
+
                             if (snapshot.data!.isNotEmpty) {
                               _postReaction = _reactionsList.firstWhereOrNull(
                                   (element) => element?.postID == post.id);
                               if (_postReaction != null) {
-                                post.myReaction = getReaction(_postReaction.reaction);
+                                // your existing code here
+                                switch (_postReaction.reaction) {
+                                  case 'like':
+                                    post.myReaction = Reaction(
+                                      value: 1,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/like.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/like_fill.png'),
+                                    );
+                                    break;
+                                  case 'love':
+                                    post.myReaction = Reaction(
+                                      value: 2,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/love.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/love.png'),
+                                    );
+                                    break;
+                                  case 'surprised':
+                                    post.myReaction = Reaction(
+                                      value: 3,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/wow.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/wow.png'),
+                                    );
+                                    break;
+                                  case 'laugh':
+                                    post.myReaction = Reaction(
+                                      value: 4,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/haha.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/haha.png'),
+                                    );
+                                    break;
+                                  case 'sad':
+                                    post.myReaction = Reaction(
+                                      value: 5,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/sad.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/sad.png'),
+                                    );
+                                    break;
+                                  case 'angry':
+                                    post.myReaction = Reaction(
+                                      value: 6,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/angry.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/angry.png'),
+                                    );
+                                    break;
+                                  default:
+                                    post.myReaction = Reaction(
+                                      value: 0,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/like.png'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/like.png'),
+                                    );
+                                    break;
+                                }
                               }
                             }
-                            return FlutterReactionButton(
-                              onReactionChanged: (reaction, isChecked) {
-                                setState(() {
-                                  post.myReaction = reaction;
-                                });
-                                if (isChecked) {
-                                  bool isNewReaction = false;
-                                  SocialReactionModel? postReaction =
-                                      _reactionsList.firstWhere(
-                                          (element) => element?.postID == post.id,
-                                          orElse: () {
-                                    isNewReaction = true;
-                                    String reactionString = reactionStringFromId(reaction!.id!);
-                                    SocialReactionModel newReaction = SocialReactionModel(
-                                        postID: post.id,
-                                        createdAt: Timestamp.now(),
-                                        reactionAuthorID: MyAppState.currentUser!.userID,
-                                        reaction: reactionString);
-                                    _reactionsList.add(newReaction);
-                                    return newReaction;
-                                  });
-                                  if (isNewReaction) {
-                                    setState(() {
-                                      post.reactionsCount++;
-                                    });
-                                    fireStoreUtils.postReaction(postReaction!, post);
-                                  } else {
-                                    postReaction!.reaction = reactionStringFromId(reaction!.id!);
-                                    postReaction.createdAt = Timestamp.now();
-                                    fireStoreUtils.updateReaction(postReaction, post);
-                                  }
-                                } else {
-                                  _reactionsList.removeWhere(
-                                      (element) => element?.postID == post.id);
-                                  setState(() {
-                                    post.reactionsCount--;
-                                  });
-                                  fireStoreUtils.removeReaction(post);
-                                }
-                              },
-                              reactions: facebookReactions,
-                              initialReaction: Reaction(
-                                  id: 0,
-                                  icon: Container(
-                                    color: Colors.transparent,
-                                    child: Icon(Icons.thumb_up_outlined,
-                                        color: isDarkMode(context)
-                                            ? Colors.grey.shade200
-                                            : null),
-                                  )),
-                              selectedReaction: post.myReaction,
-                              boxColor: Colors.grey.shade100,
-                            );
-                          } else {
-                            return Container();
                           }
+                          // Add a return statement at the end
+                          return Container(); // or SizedBox(width: 0, height: 0);
                         },
                       ),
                       SizedBox(width: 8),
@@ -467,14 +480,118 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               CupertinoIcons.conversation_bubble,
                               size: 20,
-                              color: isDarkMode(context) ? Colors.grey.shade200 : null,
+                              color: isDarkMode(context)
+                                  ? Colors.grey.shade200
+                                  : null,
                             ),
                             onTap: () => _showCommentsSheet(post)),
                       ),
-                      if (post.commentCount.round() != 0) Text('${post.commentCount.round()}'),
+                      if (post.commentCount.round() != 0)
+                        Text('${post.commentCount.round()}'),
                     ],
-                  );
-               ],
+                  ),
+
+                  /* Row(
+                    children: [
+                      SizedBox(width: 6),
+                      FutureBuilder<List<SocialReactionModel>>(
+                        future: _myReactions,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            SocialReactionModel? _postReaction;
+
+                            if (snapshot.data!.isNotEmpty) {
+                              _postReaction = _reactionsList.firstWhereOrNull(
+                                  (element) => element?.postID == post.id);
+                              if (_postReaction != null) {
+                                switch (_postReaction.reaction) {
+                                  case 'like':
+                                    post.myReaction = Reaction(
+                                      value: 1,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/like.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/like_fill.png'),
+                                    );
+                                    break;
+                                  case 'love':
+                                    post.myReaction = Reaction(
+                                      value: 2,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/love.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/love.png'),
+                                    );
+                                    break;
+                                  case 'surprised':
+                                    post.myReaction = Reaction(
+                                      value: 3,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/wow.gif'),
+                                      icon:
+                                          buildIconFacebook('assets/images/wow.png'),
+                                    );
+                                    break;
+                                  case 'laugh':
+                                    post.myReaction = Reaction(
+                                      value: 4,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/haha.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/haha.png'),
+                                    );
+                                    break;
+                                  case 'sad':
+                                    post.myReaction = Reaction(
+                                      value: 5,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/sad.gif'),
+                                      icon:
+                                          buildIconFacebook('assets/images/sad.png'),
+                                    );
+                                    break;
+                                  case 'angry':
+                                    post.myReaction = Reaction(
+                                      value: 6,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/angry.gif'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/angry.png'),
+                                    );
+                                    break;
+                                  default:
+                                    post.myReaction = Reaction(
+                                      value: 0,
+                                      previewIcon: buildPreviewIconFacebook(
+                                          'assets/images/like.png'),
+                                      icon: buildIconFacebook(
+                                          'assets/images/like.png'),
+                                    );
+                                    break;
+                                }
+                              }
+                            }
+                        },
+                      ),
+                      SizedBox(width: 8),
+                      if (post.reactionsCount.round() != 0)
+                        Text('${post.reactionsCount.round()}'),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                            child: Icon(
+                              CupertinoIcons.conversation_bubble,
+                              size: 20,
+                              color:
+                                  isDarkMode(context) ? Colors.grey.shade200 : null,
+                            ),
+                            onTap: () => _showCommentsSheet(post)),
+                      ),
+                      if (post.commentCount.round() != 0)
+                        Text('${post.commentCount.round()}'),
+                    ],
+                  ), */
+                ],
               ),
               Positioned.directional(
                 textDirection: Directionality.of(context),

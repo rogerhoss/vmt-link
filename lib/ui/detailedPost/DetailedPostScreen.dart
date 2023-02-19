@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -295,7 +295,7 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                   ),
                 ),
               Row(
-                children: [
+                  /* children: [
                   SizedBox(width: 6),
                   ReactionButtonToggle(
                     onReactionChanged: (reaction, index, isChecked) {
@@ -384,8 +384,8 @@ class _DetailedPostScreenState extends State<DetailedPostScreen> {
                   ),
                   if (post.commentCount.round() != 0)
                     Text('${post.commentCount.round()}'),
-                ],
-              ),
+                ], */
+                  ),
               FutureBuilder<List<SocialCommentModel>>(
                 future: _commentsFuture,
                 initialData: [],

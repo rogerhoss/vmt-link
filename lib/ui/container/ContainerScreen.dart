@@ -7,6 +7,7 @@ import 'package:link/constants.dart';
 import 'package:link/model/User.dart';
 import 'package:link/services/FirebaseHelper.dart';
 import 'package:link/services/helper.dart';
+import 'package:link/services/vmticons_icons.dart';
 import 'package:link/ui/conversationsScreen/ConversationsScreen.dart';
 import 'package:link/ui/createGroup/CreateGroupScreen.dart';
 import 'package:link/ui/createPost/CreatePostScreen.dart';
@@ -19,7 +20,7 @@ import 'package:link/ui/profile/ProfileScreen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-enum DrawerSelection { Feed, Discover, Conversations, Friends, Profile }
+enum DrawerSelection { Feed, Discover, Events, Conversations, Friends, Profile }
 
 class ContainerScreen extends StatefulWidget {
   final User user;
@@ -88,6 +89,16 @@ class _ContainerScreen extends State<ContainerScreen> {
                       {
                         setState(() {
                           _selectedTapIndex = 2;
+                          _drawerSelection = DrawerSelection.Events;
+                          _appBarTitle = 'events'.tr();
+                          _currentWidget = DiscoverScreen();
+                        });
+                        break;
+                      }
+                    case 3:
+                      {
+                        setState(() {
+                          _selectedTapIndex = 3;
                           _drawerSelection = DrawerSelection.Conversations;
                           _appBarTitle = 'chat'.tr();
                           _currentWidget = ConversationsScreen(
@@ -96,20 +107,20 @@ class _ContainerScreen extends State<ContainerScreen> {
                         });
                         break;
                       }
-                    case 3:
+                    case 4:
                       {
                         setState(() {
-                          _selectedTapIndex = 3;
+                          _selectedTapIndex = 4;
                           _drawerSelection = DrawerSelection.Friends;
                           _appBarTitle = 'friends'.tr();
                           _currentWidget = FriendsScreen(user: user);
                         });
                         break;
                       }
-                    case 4:
+                    case 5:
                       {
                         setState(() {
-                          _selectedTapIndex = 4;
+                          _selectedTapIndex = 5;
                           _drawerSelection = DrawerSelection.Profile;
                           _appBarTitle = 'profile'.tr();
                           _currentWidget =
@@ -123,10 +134,13 @@ class _ContainerScreen extends State<ContainerScreen> {
                 selectedItemColor: Color(COLOR_PRIMARY),
                 items: [
                   BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.home), label: 'feed'.tr()),
+                      icon: Icon(Icomoon.vmtring), label: 'feed'.tr()),
                   BottomNavigationBarItem(
-                      icon: Icon(CupertinoIcons.search),
+                      icon: Icon(CupertinoIcons.folder),
                       label: 'discover'.tr()),
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.calendar),
+                      label: 'events'.tr()),
                   BottomNavigationBarItem(
                       icon: Icon(CupertinoIcons.conversation_bubble),
                       label: 'chat'.tr()),
@@ -137,9 +151,8 @@ class _ContainerScreen extends State<ContainerScreen> {
                       icon: Icon(CupertinoIcons.person), label: 'profile'.tr()),
                 ]),
             appBar: AppBar(
-              title: Text(
-                _appBarTitle,
-              ),
+              title: Text(_appBarTitle),
+              //  title: Image.asset('assets/title.png', fit: BoxFit.cover),
               leading: _drawerSelection == DrawerSelection.Feed
                   ? IconButton(
                       tooltip: 'addStory'.tr(),

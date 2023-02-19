@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
 import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
 import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
 import 'package:link/ui/profile/ProfileScreen.dart';
-import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
+// import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -27,15 +27,15 @@ class DiscoverScreen extends StatefulWidget {
 class _DiscoverScreenState extends State<DiscoverScreen> {
   final fireStoreUtils = FireStoreUtils();
   late Stream<List<PostModel>> _postsStream;
-  late Future<List<SocialReactionModel>> _myReactions;
+//  late Future<List<SocialReactionModel>> _myReactions;
   List<SocialReactionModel?> _reactionsList = [];
 
   @override
   void initState() {
-    _myReactions = fireStoreUtils.getMyReactions()
-      ..then((value) {
-        _reactionsList.addAll(value);
-      });
+//    _myReactions = fireStoreUtils.getMyReactions()
+//      ..then((value) {
+//        _reactionsList.addAll(value);
+//      });
     _postsStream = fireStoreUtils.discoverPosts();
     fireStoreUtils.getBlocks().listen((shouldRefresh) {
       if (shouldRefresh) {
@@ -239,7 +239,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       ),
                     ),
                   Row(
-                    children: [
+                      /* children: [
                       SizedBox(width: 6),
                       FutureBuilder<List<SocialReactionModel>>(
                         future: _myReactions,
@@ -427,8 +427,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       ),
                       if (post.commentCount.round() != 0)
                         Text('${post.commentCount.round()}'),
-                    ],
-                  ),
+                    ], */
+                      ),
                 ],
               ),
               Positioned.directional(
@@ -449,7 +449,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     );
   }
 
-  _showCommentsSheet(PostModel post) {
+/*  _showCommentsSheet(PostModel post) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -463,6 +463,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       },
     );
   }
+*/
 
   _postSettingsMenu(PostModel post) {
     final action = CupertinoActionSheet(

@@ -111,9 +111,9 @@ class FireStoreUtils {
           '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
           'KB');
     });
-    uploadTask.whenComplete(() {}).catchError((onError) {
+    /* uploadTask.whenComplete(() {}).catchError((onError) {
       print((onError as PlatformException).message);
-    });
+    }); */
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
 
@@ -1125,9 +1125,9 @@ class FireStoreUtils {
           '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
           'KB');
     });
-    uploadTask.whenComplete(() {}).catchError((onError) {
+    /* uploadTask.whenComplete(() {}).catchError((onError) {
       print((onError as PlatformException).message);
-    });
+    }); */
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
 
@@ -1553,9 +1553,9 @@ class FireStoreUtils {
         '${(event.totalBytes.toDouble() / 1000).toStringAsFixed(2)} '
       ]));
     });
-    uploadTask.whenComplete(() {}).catchError((onError) {
+    /* uploadTask.whenComplete(() {}).catchError((onError) {
       print((onError as PlatformException).message);
-    });
+    }); */
     var storageRef = (await uploadTask.whenComplete(() {})).ref;
     var downloadUrl = await storageRef.getDownloadURL();
 
@@ -1906,6 +1906,7 @@ class FireStoreUtils {
       print('FireStoreUtils.firebaseCreateNewUser $e $s');
       return 'Couldn\'t sign up'.tr();
     }
+    return null;
   }
 
   /// login with email and password with firebase

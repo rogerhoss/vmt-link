@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -81,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: widget.fromContainer
           ? null
           : AppBar(
-              title: Text('profile').tr(),
+              title: Text('My Profile').tr(),
               actions: [
                 if (user.userID == MyAppState.currentUser!.userID)
                   IconButton(
@@ -189,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'friends',
+                'contacts',
                 style: TextStyle(
                     color: isDarkMode(context)
                         ? Colors.grey.shade200
@@ -646,7 +646,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               }
                             }
-                            return FlutterReactionButtonCheck(
+                            /* This is the location of the commented out code */
+                            /* return FlutterReactionButtonCheck(
                               onReactionChanged: (reaction, index, isChecked) {
                                 setState(() {
                                   post.myReaction = Reaction(
@@ -724,7 +725,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               selectedReaction: post.myReaction.value != 0
                                   ? facebookReactions[post.myReaction.value - 1]
                                   : facebookReactions[0],
-                            );
+                            ); */
+
+                            return Container();
                           } else {
                             return Container();
                           }
