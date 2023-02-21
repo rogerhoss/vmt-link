@@ -12,7 +12,7 @@ import 'package:link/ui/conversationsScreen/ConversationsScreen.dart';
 import 'package:link/ui/createGroup/CreateGroupScreen.dart';
 import 'package:link/ui/createPost/CreatePostScreen.dart';
 import 'package:link/ui/discover/DiscoverScreen.dart';
-import 'package:link/ui/friends/FriendsScreen.dart';
+import 'package:link/ui/people/PeopleScreen.dart';
 import 'package:link/ui/home/HomeScreen.dart';
 import 'package:link/ui/notifications/NotificationsScreen.dart';
 import 'package:link/ui/postStory/PostStoryScreen.dart';

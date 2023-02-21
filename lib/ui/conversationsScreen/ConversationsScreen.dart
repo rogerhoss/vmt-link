@@ -37,7 +37,7 @@ class _ConversationsState extends State<ConversationsScreen> {
         if (mounted) setState(() {});
       }
     });
-    _friendsFuture = fireStoreUtils.getFriends(MyAppState.currentUser!.userID);
+    _friendsFuture = fireStoreUtils.getContacts(MyAppState.currentUser!.userID);
     _conversationsStream = fireStoreUtils.getConversations(user.userID);
   }
 

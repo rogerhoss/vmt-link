@@ -37,7 +37,7 @@ class _ContactsScreenState extends State<FriendsScreen> {
         if (mounted) setState(() {});
       }
     });
-    _future = fireStoreUtils.getContacts(user.userID, false);
+    _future = fireStoreUtils.getPeople(user.userID, false);
   }
 
   @override
@@ -53,7 +53,10 @@ class _ContactsScreenState extends State<FriendsScreen> {
                   onPressed: () async {
                     await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => SearchScreen(user: user)));
-                    _future = fireStoreUtils.getContacts(user.userID, false);
+                    // I removed this because when you when from the friends screen to the seach page
+                    // it would append the friends to the entire list.  There may be a better way to
+                    // handle this.
+                    _future = fireStoreUtils.getPeople(user.userID, false);
                     setState(() {});
                   },
                   style: TextButton.styleFrom(
@@ -102,7 +105,7 @@ class _ContactsScreenState extends State<FriendsScreen> {
                 separatorBuilder: (context, index) => Divider(),
                 itemCount: snap.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  _contacts = snap.data!;
+                  // _contacts = snap.data!;
                   ContactModel contact = snap.data![index];
                   return Padding(
                     padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
@@ -160,14 +163,12 @@ class _ContactsScreenState extends State<FriendsScreen> {
                           hideProgress();
                           setState(() {});
                         },
-                        child: Text(
-                          getStatusByType(contact.type),
-                          style: TextStyle(
-                              color: isDarkMode(context)
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ).tr(),
+                        child: Icon(
+                          getContactStatus(contact.type),
+                          size: 30,
+                          color:
+                              isDarkMode(context) ? Colors.white : Colors.black,
+                        ),
                       ),
                     ),
                   );
@@ -180,44 +181,30 @@ class _ContactsScreenState extends State<FriendsScreen> {
     );
   }
 
-  String getStatusByType(ContactType type) {
+  IconData? getContactStatus(ContactType type) {
     switch (type) {
-      case ContactType.ACCEPT:
-        return 'accept';
-      case ContactType.PENDING:
-        return 'cancel';
       case ContactType.FRIEND:
-        return 'unfriend';
+        return CupertinoIcons.person_crop_square_fill;
       case ContactType.UNKNOWN:
-        return 'addFriend';
-      case ContactType.BLOCKED:
-        return 'unblock';
-      default:
-        return 'addFriend';
+        return CupertinoIcons.person_crop_square;
+      // // case ContactType.BLOCKED:
+      // //   return 'unblock';
+      // default:
     }
   }
 
   _onContactButtonClicked(
       ContactModel contact, int index, bool fromSearch) async {
     switch (contact.type) {
-      case ContactType.ACCEPT:
-        showProgress(context, 'acceptingFriendship'.tr(), false);
-        await fireStoreUtils.onFriendAccept(contact.user, false);
-        _contacts[index].type = ContactType.FRIEND;
-        break;
       case ContactType.FRIEND:
-        showProgress(context, 'removingFriendship'.tr(), false);
-        await fireStoreUtils.onUnFriend(contact.user, false);
+        showProgress(context, 'removingFromContacts'.tr(), false);
+        await fireStoreUtils.removeFromContacts(contact.user, false);
         _contacts.removeAt(index);
-        break;
-      case ContactType.PENDING:
-        showProgress(context, 'removingFriendshipRequest'.tr(), false);
-        await fireStoreUtils.onCancelRequest(contact.user, false);
-        _contacts.removeAt(index);
-        break;
-      case ContactType.BLOCKED:
         break;
       case ContactType.UNKNOWN:
+        showProgress(context, 'addingtocontacts'.tr(), false);
+        await fireStoreUtils.addToContacts(contact.user, false);
+//        _contacts.add(value)
         break;
     }
   }

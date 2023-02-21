@@ -5,7 +5,9 @@ class ContactModel {
 
   User user;
 
-  ContactModel({this.type = ContactType.UNKNOWN, user}) : this.user = user ?? User();
+  ContactModel({this.type = ContactType.UNKNOWN, user})
+      : this.user = user ?? User();
 }
 
-enum ContactType { FRIEND, PENDING, BLOCKED, UNKNOWN, ACCEPT }
+// enum ContactType { FRIEND, PENDING, BLOCKED, UNKNOWN, ACCEPT }
+enum ContactType { FRIEND, UNKNOWN }

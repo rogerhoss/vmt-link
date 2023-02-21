@@ -9,7 +9,7 @@ import 'package:link/model/User.dart';
 import 'package:link/services/FirebaseHelper.dart';
 import 'package:link/services/helper.dart';
 import 'package:link/ui/container/ContainerScreen.dart';
-import 'package:link/ui/phoneAuth/PhoneNumberInputScreen.dart';
+// import 'package:link/ui/phoneAuth/PhoneNumberInputScreen.dart';
 import 'package:image_picker/image_picker.dart';
 
 File? _image;
@@ -467,31 +467,31 @@ class _SignUpState extends State<SignUpScreen> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Center(
-            child: Text(
-              'or',
-              style: TextStyle(
-                  color: isDarkMode(context) ? Colors.white : Colors.black),
-            ).tr(),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(32.0),
+        //   child: Center(
+        //     child: Text(
+        //       'or',
+        //       style: TextStyle(
+        //           color: isDarkMode(context) ? Colors.white : Colors.black),
+        //     ).tr(),
+        //   ),
+        // ),
 
-        /// switch between sign up with phone number and email sign up states
-        InkWell(
-          onTap: () {
-            push(context, PhoneNumberInputScreen(login: false));
-          },
-          child: Text(
-            'Sign up with phone number'.tr(),
-            style: TextStyle(
-                color: Color(COLOR_GLOBAL_THREE),
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                letterSpacing: 1),
-          ),
-        )
+        // /// switch between sign up with phone number and email sign up states
+        // InkWell(
+        //   onTap: () {
+        //     push(context, PhoneNumberInputScreen(login: false));
+        //   },
+        //   child: Text(
+        //     'Sign up with phone number'.tr(),
+        //     style: TextStyle(
+        //         color: Color(COLOR_GLOBAL_THREE),
+        //         fontWeight: FontWeight.bold,
+        //         fontSize: 15,
+        //         letterSpacing: 1),
+        //   ),
+        // )
       ],
     );
   }

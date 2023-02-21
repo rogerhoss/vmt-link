@@ -43,7 +43,7 @@ class FireStoreUtils {
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
   static Reference storage = FirebaseStorage.instance.ref();
   List<ContactModel> contactsList = [];
-  List<User?> friends = [];
+  List<User?> contacts = [];
   List<User?> pendingList = [];
   List<User?> receivedRequests = [];
   StreamController<List<HomeConversationModel>>? conversationsStream;
@@ -182,39 +182,22 @@ class FireStoreUtils {
   /// * users that are already your friends
   /// * if @param searchScreen is true then we include users that you didn't
   /// send friend/follow requests and neither did they.
-  Future<List<ContactModel>> getContacts(
-      String userID, bool searchScreen) async {
-    /// get users that you both friend/follow each other
-    friends = await getFriends(MyAppState.currentUser!.userID);
+  Future<List<ContactModel>> getPeople(String userID, bool contactsOnly) async {
+    /// get users that are in your contacts
+    contacts = await getContacts(MyAppState.currentUser!.userID);
 
     /// get users that you sent them friend/follow requests
-    pendingList = await getPendingRequests();
+    // pendingList = await getPendingRequests();
 
     /// get users that sent you friend/follow requests
-    receivedRequests = await getReceivedRequests();
     contactsList = [];
-    for (final friend in friends) {
+    for (final friend in contacts) {
       /// looping over the friends list
       /// we set contactModel.type to be FRIEND and add the contactModel to
       /// the contacts list
       contactsList.add(ContactModel(type: ContactType.FRIEND, user: friend));
     }
-    for (final pendingUser in pendingList) {
-      /// looping over the pendingList list
-      /// we set contactModel.type to be PENDING and add the contactModel to
-      /// the contacts list
-      contactsList
-          .add(ContactModel(type: ContactType.PENDING, user: pendingUser));
-    }
-    for (final newFriendRequest in receivedRequests) {
-      /// looping over the receivedRequests list
-      /// we set contactModel.type to be ACCEPT and add the contactModel to
-      /// the contacts list
-      contactsList
-          .add(ContactModel(type: ContactType.ACCEPT, user: newFriendRequest));
-    }
-
-    if (searchScreen) {
+    if (!contactsOnly) {
       /// if this is true, this means we want to include strangers in our
       /// final contacts list, good when you want to search for new users
       await firestore.collection(USERS).get().then((onValue) {
@@ -224,21 +207,10 @@ class FireStoreUtils {
             User contact = User.fromJson(user.data());
 
             /// check if the contact is already in our friends list
-            User? friend = friends
+            User? friend = contacts
                 .firstWhereOrNull((user) => user?.userID == contact.userID);
 
-            /// check if the contact is already in our pending list
-            User? pending = pendingList
-                .firstWhereOrNull((user) => user?.userID == contact.userID);
-
-            /// check if the contact is already in our receivedRequests list
-            User? sent = receivedRequests
-                .firstWhereOrNull((user) => user?.userID == contact.userID);
-
-            /// if the contact is not our friend and didn't send us a
-            /// friend/follow request and we didn't send him a friend/follow
-            /// request then he is an unknown user to us
-            bool isUnknown = friend == null && pending == null && sent == null;
+            bool isUnknown = friend == null;
             if (user.id != userID) {
               if (isUnknown) {
                 if (contact.userID.isEmpty) contact.userID = user.id;
@@ -259,9 +231,9 @@ class FireStoreUtils {
       });
     }
 
-    /// lastly we remove blocked users from the list
-    contactsList
-        .removeWhere((element) => validateIfUserBlocked(element.user.userID));
+    // /// lastly we remove blocked users from the list
+    // contactsList
+    //     .removeWhere((element) => validateIfUserBlocked(element.user.userID));
 
     /// we remove duplicated users and then return the list of contacts
     return contactsList.toSet().toList();
@@ -270,352 +242,241 @@ class FireStoreUtils {
   /// query with userID to get this user's friends
   /// @param userID the id of the user
   /// @return list of this user friends
-  Future<List<User>> getFriends(String userID) async {
-    List<User?> receivedFriends = [];
-    List<User> actualFriends = [];
+  Future<List<User>> getContacts(String userID) async {
+    // List<User?> receivedFriends = [];
+    List<User> actualContacts = [];
 
     /// query the users that sent you friend/follow requests
-    QuerySnapshot<Map<String, dynamic>> receivedFriendsResult = await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .get();
+    // QuerySnapshot<Map<String, dynamic>> receivedFriendsResult = await firestore
+    //     .collection(SOCIAL_GRAPH)
+    //     .doc(userID)
+    //     .collection(RECEIVED_FRIEND_REQUESTS)
+    //     .get();
 
     /// query the users that you sent them friend/follow requests
     QuerySnapshot<Map<String, dynamic>> sentFriendsResult = await firestore
         .collection(SOCIAL_GRAPH)
         .doc(userID)
-        .collection(SENT_FRIEND_REQUESTS)
+        .collection(CONTACTS_LIST)
         .get();
 
-    await Future.forEach(receivedFriendsResult.docs,
-        (DocumentSnapshot<Map<String, dynamic>> receivedFriend) {
-      receivedFriends.add(User.fromJson(receivedFriend.data() ?? {}));
-    });
+    // await Future.forEach(receivedFriendsResult.docs,
+    //     (DocumentSnapshot<Map<String, dynamic>> receivedFriend) {
+    //   receivedFriends.add(User.fromJson(receivedFriend.data() ?? {}));
+    // });
 
     await Future.forEach(sentFriendsResult.docs,
         (DocumentSnapshot<Map<String, dynamic>> receivedFriend) {
       User pendingUser = User.fromJson(receivedFriend.data() ?? {});
-      User? friendOrNull = receivedFriends
-          .firstWhereOrNull((element) => element?.userID == pendingUser.userID);
-      if (friendOrNull != null) actualFriends.add(pendingUser);
+      // User? friendOrNull = receivedFriends
+      //     .firstWhereOrNull((element) => element?.userID == pendingUser.userID);
+      // if (friendOrNull != null) actualFriends.add(pendingUser);
+      actualContacts.add(pendingUser);
     });
 
-    actualFriends
-        .removeWhere((element) => validateIfUserBlocked(element.userID));
-
-    return actualFriends.toSet().toList();
+    // actualFriends
+    //     .removeWhere((element) => validateIfUserBlocked(element.userID));
+    return actualContacts.toSet().toList();
   }
 
   /// query this user's pending friends
   /// @return list of this user pending friends
-  Future<List<User>> getPendingRequests() async {
-    List<User> pendingList = [];
-    List<User?> receivedList = [];
+  // Future<List<User>> getPendingRequests() async {
+  //   List<User> pendingList = [];
+  //   List<User?> receivedList = [];
 
-    /// query the users that you sent them friend/follow requests
-    QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
-        .get();
+  //   /// query the users that you sent them friend/follow requests
+  //   QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .collection(CONTACTS_LIST)
+  //       .get();
 
-    /// query the users that sent you friend/follow requests
-    QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .get();
+  //   /// query the users that sent you friend/follow requests
+  //   QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .collection(RECEIVED_FRIEND_REQUESTS)
+  //       .get();
 
-    await Future.forEach(receivedRequestsResult.docs,
-        (DocumentSnapshot<Map<String, dynamic>> user) {
-      receivedList.add(User.fromJson(user.data() ?? {}));
-    });
+  //   await Future.forEach(receivedRequestsResult.docs,
+  //       (DocumentSnapshot<Map<String, dynamic>> user) {
+  //     receivedList.add(User.fromJson(user.data() ?? {}));
+  //   });
 
-    await Future.forEach(sentRequestsResult.docs,
-        (DocumentSnapshot<Map<String, dynamic>> document) {
-      User user = User.fromJson(document.data() ?? {});
-      User? pendingOrNull = receivedList
-          .firstWhereOrNull((element) => element?.userID == user.userID);
-      if (pendingOrNull == null) pendingList.add(user);
-    });
-    return pendingList.toSet().toList();
-  }
+  //   await Future.forEach(sentRequestsResult.docs,
+  //       (DocumentSnapshot<Map<String, dynamic>> document) {
+  //     User user = User.fromJson(document.data() ?? {});
+  //     User? pendingOrNull = receivedList
+  //         .firstWhereOrNull((element) => element?.userID == user.userID);
+  //     if (pendingOrNull == null) pendingList.add(user);
+  //   });
+  //   return pendingList.toSet().toList();
+  // }
 
   /// query this user's received friend requests
   /// @return list of users who sent you friend/follow requests
-  Future<List<User>> getReceivedRequests() async {
-    List<User> receivedList = [];
-    List<User?> pendingList = [];
+  // Future<List<User>> getReceivedRequests() async {
+  //   List<User> receivedList = [];
+  //   List<User?> pendingList = [];
 
-    /// query the users that sent you friend/follow requests
-    QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .get();
+  //   /// query the users that sent you friend/follow requests
+  //   QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .collection(RECEIVED_FRIEND_REQUESTS)
+  //       .get();
 
-    /// query the users that you sent them friend/follow requests
-    QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
-        .get();
+  //   /// query the users that you sent them friend/follow requests
+  //   QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .collection(CONTACTS_LIST)
+  //       .get();
 
-    await Future.forEach(sentRequestsResult.docs,
-        (DocumentSnapshot<Map<String, dynamic>> user) {
-      pendingList.add(User.fromJson(user.data() ?? {}));
-    });
+  //   await Future.forEach(sentRequestsResult.docs,
+  //       (DocumentSnapshot<Map<String, dynamic>> user) {
+  //     pendingList.add(User.fromJson(user.data() ?? {}));
+  //   });
 
-    await Future.forEach(receivedRequestsResult.docs,
-        (DocumentSnapshot<Map<String, dynamic>> document) {
-      User sentFriend = User.fromJson(document.data() ?? {});
-      User? sentOrNull = pendingList
-          .firstWhereOrNull((element) => element?.userID == sentFriend.userID);
-      if (sentOrNull == null) receivedList.add(sentFriend);
-    });
+  //   await Future.forEach(receivedRequestsResult.docs,
+  //       (DocumentSnapshot<Map<String, dynamic>> document) {
+  //     User sentFriend = User.fromJson(document.data() ?? {});
+  //     User? sentOrNull = pendingList
+  //         .firstWhereOrNull((element) => element?.userID == sentFriend.userID);
+  //     if (sentOrNull == null) receivedList.add(sentFriend);
+  //   });
 
-    return receivedList.toSet().toList();
-  }
+  //   return receivedList.toSet().toList();
+  // }
 
   /// we accept the friend request sent by @param pendingUser
   /// @param pendingUser the user who sent us the friend/follow request
   /// @param fromProfile is a flag used to manipulate lists, true if you are
   /// calling this from profile
-  onFriendAccept(User pendingUser, bool fromProfile) async {
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
-        .doc(pendingUser.userID)
-        .set(pendingUser.toJson());
+  // onFriendAccept(User pendingUser, bool fromProfile) async {
+  //   await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .collection(CONTACTS_LIST)
+  //       .doc(pendingUser.userID)
+  //       .set(pendingUser.toJson());
 
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(pendingUser.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .doc(MyAppState.currentUser!.userID)
-        .set(MyAppState.currentUser!.toJson());
+  //   await firestore
+  //       .collection(SOCIAL_GRAPH)
+  //       .doc(pendingUser.userID)
+  //       .collection(RECEIVED_FRIEND_REQUESTS)
+  //       .doc(MyAppState.currentUser!.userID)
+  //       .set(MyAppState.currentUser!.toJson());
 
-    if (!fromProfile) {
-      pendingList.remove(pendingUser);
-      friends.add(pendingUser);
-    }
+  //   if (!fromProfile) {
+  //     pendingList.remove(pendingUser);
+  //     friends.add(pendingUser);
+  //   }
 
-    /// share new user's posts with current user
-    QuerySnapshot<Map<String, dynamic>> pendingUserPostsQuery = await firestore
-        .collection(SOCIAL_DISCOVER)
-        .where('authorID', isEqualTo: pendingUser.userID)
-        .get();
+  //   /// share new user's posts with current user
+  //   QuerySnapshot<Map<String, dynamic>> pendingUserPostsQuery = await firestore
+  //       .collection(SOCIAL_DISCOVER)
+  //       .where('authorID', isEqualTo: pendingUser.userID)
+  //       .get();
 
-    await Future.forEach(pendingUserPostsQuery.docs,
-        (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
-      PostModel post = PostModel.fromJson(document.data());
-      await firestore
-          .collection(FEED)
-          .doc(MyAppState.currentUser!.userID)
-          .collection(MAIN_FEED)
-          .doc(post.id)
-          .set(post.toJson());
-    });
+  //   await Future.forEach(pendingUserPostsQuery.docs,
+  //       (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
+  //     PostModel post = PostModel.fromJson(document.data());
+  //     await firestore
+  //         .collection(FEED)
+  //         .doc(MyAppState.currentUser!.userID)
+  //         .collection(MAIN_FEED)
+  //         .doc(post.id)
+  //         .set(post.toJson());
+  //   });
 
-    /// share new user's stories with current user
-    QuerySnapshot<Map<String, dynamic>> pendingUserStoriesQuery =
-        await firestore
-            .collection(STORIES)
-            .where('authorID', isEqualTo: pendingUser.userID)
-            .get();
+  //   /// share new user's stories with current user
+  //   QuerySnapshot<Map<String, dynamic>> pendingUserStoriesQuery =
+  //       await firestore
+  //           .collection(STORIES)
+  //           .where('authorID', isEqualTo: pendingUser.userID)
+  //           .get();
 
-    await Future.forEach(pendingUserStoriesQuery.docs,
-        (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
-      StoryModel post = StoryModel.fromJson(document.data());
-      await firestore
-          .collection(FEED)
-          .doc(MyAppState.currentUser!.userID)
-          .collection(STORIES_FEED)
-          .doc(post.id)
-          .set(post.toJson());
-    });
+  //   await Future.forEach(pendingUserStoriesQuery.docs,
+  //       (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
+  //     StoryModel post = StoryModel.fromJson(document.data());
+  //     await firestore
+  //         .collection(FEED)
+  //         .doc(MyAppState.currentUser!.userID)
+  //         .collection(STORIES_FEED)
+  //         .doc(post.id)
+  //         .set(post.toJson());
+  //   });
 
-    /// share current user's posts with new friend
-    QuerySnapshot<Map<String, dynamic>> currentUserPostsQuery = await firestore
-        .collection(SOCIAL_DISCOVER)
-        .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
-        .get();
+  //   /// share current user's posts with new friend
+  //   QuerySnapshot<Map<String, dynamic>> currentUserPostsQuery = await firestore
+  //       .collection(SOCIAL_DISCOVER)
+  //       .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
+  //       .get();
 
-    await Future.forEach(currentUserPostsQuery.docs,
-        (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
-      PostModel post = PostModel.fromJson(document.data());
-      await firestore
-          .collection(FEED)
-          .doc(pendingUser.userID)
-          .collection(MAIN_FEED)
-          .doc(post.id)
-          .set(post.toJson());
-    });
+  //   await Future.forEach(currentUserPostsQuery.docs,
+  //       (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
+  //     PostModel post = PostModel.fromJson(document.data());
+  //     await firestore
+  //         .collection(FEED)
+  //         .doc(pendingUser.userID)
+  //         .collection(MAIN_FEED)
+  //         .doc(post.id)
+  //         .set(post.toJson());
+  //   });
 
-    /// share current user's stories with new friend
-    QuerySnapshot<Map<String, dynamic>> currentUserStoriesQuery =
-        await firestore
-            .collection(STORIES)
-            .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
-            .get();
+  //   /// share current user's stories with new friend
+  //   QuerySnapshot<Map<String, dynamic>> currentUserStoriesQuery =
+  //       await firestore
+  //           .collection(STORIES)
+  //           .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
+  //           .get();
 
-    await Future.forEach(currentUserStoriesQuery.docs,
-        (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
-      StoryModel post = StoryModel.fromJson(document.data());
-      await firestore
-          .collection(FEED)
-          .doc(pendingUser.userID)
-          .collection(STORIES_FEED)
-          .doc(post.id)
-          .set(post.toJson());
-    });
+  //   await Future.forEach(currentUserStoriesQuery.docs,
+  //       (QueryDocumentSnapshot<Map<String, dynamic>> document) async {
+  //     StoryModel post = StoryModel.fromJson(document.data());
+  //     await firestore
+  //         .collection(FEED)
+  //         .doc(pendingUser.userID)
+  //         .collection(STORIES_FEED)
+  //         .doc(post.id)
+  //         .set(post.toJson());
+  //   });
 
-    /// save notification in the database in the notifications table
-    _saveNotification(
-        'accept_friend',
-        'Accepted your friend request.',
-        pendingUser,
-        MyAppState.currentUser!.fullName(),
-        {'fromUser': MyAppState.currentUser!.toJson()});
+  //   /// save notification in the database in the notifications table
+  //   _saveNotification(
+  //       'accept_friend',
+  //       'Accepted your friend request.',
+  //       pendingUser,
+  //       MyAppState.currentUser!.fullName(),
+  //       {'fromUser': MyAppState.currentUser!.toJson()});
 
-    if (pendingUser.settings.pushNewMessages) {
-      await sendNotification(
-          pendingUser.fcmToken,
-          MyAppState.currentUser!.fullName(),
-          'Accepted your friend request.',
-          null);
-    }
-  }
+  //   if (pendingUser.settings.pushNewMessages) {
+  //     await sendNotification(
+  //         pendingUser.fcmToken,
+  //         MyAppState.currentUser!.fullName(),
+  //         'Accepted your friend request.',
+  //         null);
+  //   }
+  // }
 
   /// delete friendship between two users
   /// @param friend the friend that we are going to unfriend
   /// @param fromProfile this flag is used to manipulate lists, true if you
   /// are calling this from profile screen
-  onUnFriend(User friend, bool fromProfile) async {
+  removeFromContacts(User friend, bool fromProfile) async {
     await firestore
         .collection(SOCIAL_GRAPH)
         .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
+        .collection(CONTACTS_LIST)
         .doc(friend.userID)
-        .delete();
-
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .doc(friend.userID)
-        .delete();
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(friend.userID)
-        .collection(SENT_FRIEND_REQUESTS)
-        .doc(MyAppState.currentUser!.userID)
-        .delete();
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(friend.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .doc(MyAppState.currentUser!.userID)
         .delete();
 
     if (!fromProfile) {
-      friends.remove(friend);
+      contacts.remove(friend);
       ContactModel unknownContact =
           contactsList.firstWhere((contact) => contact.user == friend);
-      contactsList.remove(unknownContact);
-      unknownContact.type = ContactType.UNKNOWN;
-      contactsList.add(unknownContact);
-    }
-
-    ///remove deleted user's posts from current user feed
-    QuerySnapshot pendingUserPostsQuery = await firestore
-        .collection(SOCIAL_DISCOVER)
-        .where('authorID', isEqualTo: friend.userID)
-        .get();
-
-    await Future.forEach(pendingUserPostsQuery.docs,
-        (QueryDocumentSnapshot document) async {
-      await firestore
-          .collection(FEED)
-          .doc(MyAppState.currentUser!.userID)
-          .collection(MAIN_FEED)
-          .doc(document.id)
-          .delete();
-    });
-
-    ///remove deleted user's stories from current user feed
-    QuerySnapshot pendingUserStoriesQuery = await firestore
-        .collection(STORIES)
-        .where('authorID', isEqualTo: friend.userID)
-        .get();
-
-    await Future.forEach(pendingUserStoriesQuery.docs,
-        (QueryDocumentSnapshot document) async {
-      await firestore
-          .collection(FEED)
-          .doc(MyAppState.currentUser!.userID)
-          .collection(STORIES_FEED)
-          .doc(document.id)
-          .delete();
-    });
-
-    ///remove current user's posts from new friend feed
-    QuerySnapshot currentUserPostsQuery = await firestore
-        .collection(SOCIAL_DISCOVER)
-        .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
-        .get();
-
-    await Future.forEach(currentUserPostsQuery.docs,
-        (QueryDocumentSnapshot document) async {
-      await firestore
-          .collection(FEED)
-          .doc(friend.userID)
-          .collection(MAIN_FEED)
-          .doc(document.id)
-          .delete();
-    });
-
-    ///remove current user's stories from new friend feed
-    QuerySnapshot currentUserStoriesQuery = await firestore
-        .collection(STORIES)
-        .where('authorID', isEqualTo: MyAppState.currentUser!.userID)
-        .get();
-
-    await Future.forEach(currentUserStoriesQuery.docs,
-        (QueryDocumentSnapshot document) async {
-      await firestore
-          .collection(FEED)
-          .doc(friend.userID)
-          .collection(STORIES_FEED)
-          .doc(document.id)
-          .delete();
-    });
-  }
-
-  /// cancel the request between these two users
-  /// @param user the other user
-  /// @param fromProfile this flag is used to manipulate lists, true if you
-  /// are calling this from profile screen
-  onCancelRequest(User user, bool fromProfile) async {
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
-        .doc(user.userID)
-        .delete();
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(user.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .doc(MyAppState.currentUser!.userID)
-        .delete();
-
-    if (!fromProfile) {
-      pendingList.remove(user);
-      ContactModel unknownContact =
-          contactsList.firstWhere((contact) => contact.user == user);
       contactsList.remove(unknownContact);
       unknownContact.type = ContactType.UNKNOWN;
       contactsList.add(unknownContact);
@@ -626,38 +487,13 @@ class FireStoreUtils {
   /// @param user the other user
   /// @param fromProfile this flag is used to manipulate lists, true if you
   /// are calling this from profile screen
-  sendFriendRequest(User user, bool fromProfile) async {
+  addToContacts(User user, bool fromProfile) async {
     await firestore
         .collection(SOCIAL_GRAPH)
         .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
+        .collection(CONTACTS_LIST)
         .doc(user.userID)
         .set(user.toJson());
-    await firestore
-        .collection(SOCIAL_GRAPH)
-        .doc(user.userID)
-        .collection(RECEIVED_FRIEND_REQUESTS)
-        .doc(MyAppState.currentUser!.userID)
-        .set(MyAppState.currentUser!.toJson());
-    if (!fromProfile) {
-      pendingList.add(user);
-      ContactModel pendingContact =
-          contactsList.firstWhere((contact) => contact.user == user);
-      contactsList.remove(pendingContact);
-      pendingContact.type = ContactType.PENDING;
-      contactsList.add(pendingContact);
-    }
-    _saveNotification(
-        'friend_request',
-        'Sent you a friend request.',
-        user,
-        MyAppState.currentUser!.fullName(),
-        {'fromUser': MyAppState.currentUser!.toJson()});
-
-    if (user.settings.pushNewMessages) {
-      await sendNotification(user.fcmToken, MyAppState.currentUser!.fullName(),
-          'Sent you a friend request.', null);
-    }
   }
 
   /// get a stream of user conversations
@@ -1421,7 +1257,7 @@ class FireStoreUtils {
         .orderBy('createdAt', descending: true)
         .snapshots();
 
-    List<User> knownUsers = await getFriends(MyAppState.currentUser!.userID);
+    List<User> knownUsers = await getContacts(MyAppState.currentUser!.userID);
     knownUsers.add(MyAppState.currentUser!);
 
     _discoverPostsStreamSubscription = result.listen(
@@ -1494,8 +1330,8 @@ class FireStoreUtils {
   /// query profile 6 friends or less to be displayed in the profile screen
   /// @param userID the id of the user whose the profile owner
   /// @return List of User objects that are friends with this user
-  Future<List<User>> getUserFriendsForProfile(String userID) async {
-    List<User> friends = await getFriends(userID);
+  Future<List<User>> getUserContactsForProfile(String userID) async {
+    List<User> friends = await getContacts(userID);
     if (friends.length > 6) {
       friends.removeRange(6, friends.length);
     }
@@ -1618,7 +1454,7 @@ class FireStoreUtils {
         firestore.collection(SOCIAL_DISCOVER).doc();
     post.id = documentReference.id;
     await documentReference.set(post.toJson());
-    List<User> followers = await getFriends(MyAppState.currentUser!.userID);
+    List<User> followers = await getContacts(MyAppState.currentUser!.userID);
     followers.add(MyAppState.currentUser!);
     await Future.forEach(followers, (User follower) async {
       await firestore
@@ -1646,7 +1482,7 @@ class FireStoreUtils {
         storyMediaURL: storyUrl);
 
     await storyDocumentRef.set(story.toJson());
-    List<User> followers = await getFriends(MyAppState.currentUser!.userID);
+    List<User> followers = await getContacts(MyAppState.currentUser!.userID);
     followers.add(MyAppState.currentUser!);
     await Future.forEach(followers, (User follower) async {
       await firestore
@@ -1711,7 +1547,7 @@ class FireStoreUtils {
     DocumentSnapshot sentRequestsTableResult = await firestore
         .collection(SOCIAL_GRAPH)
         .doc(MyAppState.currentUser!.userID)
-        .collection(SENT_FRIEND_REQUESTS)
+        .collection(CONTACTS_LIST)
         .doc(userID)
         .get();
 
@@ -1730,13 +1566,9 @@ class FireStoreUtils {
   /// @param profileOwner is a User object of another user
   profileRelationButtonClick(String profileRelation, User profileOwner) async {
     if (profileRelation == 'Add Friend') {
-      await sendFriendRequest(profileOwner, true);
+      await addToContacts(profileOwner, true);
     } else if (profileRelation == 'Unfriend') {
-      await onUnFriend(profileOwner, true);
-    } else if (profileRelation == 'Accept') {
-      await onFriendAccept(profileOwner, true);
-    } else if (profileRelation == 'Cancel') {
-      await onCancelRequest(profileOwner, true);
+      await removeFromContacts(profileOwner, true);
     }
   }
 
@@ -2221,9 +2053,9 @@ class FireStoreUtils {
         }
       });
 
-      //delete user stories from SENT_FRIEND_REQUESTS collection group
+      //delete user stories from CONTACTS_LIST collection group
       await firestore
-          .collectionGroup(SENT_FRIEND_REQUESTS)
+          .collectionGroup(CONTACTS_LIST)
           .where('id', isEqualTo: MyAppState.currentUser!.userID)
           .get()
           .then((value) async {

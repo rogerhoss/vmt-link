@@ -90,6 +90,7 @@ updateProgress(String message) {
 
 hideProgress() async {
   await progressDialog.hide();
+  print('I went there');
 }
 
 //helper method to show alert dialog

@@ -2,29 +2,29 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
+// import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_reaction_button/flutter_reaction_button.dart';
+// import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:link/constants.dart';
 import 'package:link/main.dart';
-import 'package:link/model/MessageData.dart';
-import 'package:link/model/PostModel.dart';
-import 'package:link/model/SocialReactionModel.dart';
+// import 'package:link/model/MessageData.dart';
+// import 'package:link/model/PostModel.dart';
+// import 'package:link/model/SocialReactionModel.dart';
 import 'package:link/model/User.dart';
 import 'package:link/services/FirebaseHelper.dart';
 import 'package:link/services/helper.dart';
 import 'package:link/ui/allFriends/AllFriendsScreen.dart';
-import 'package:link/ui/createPost/CreatePostScreen.dart';
-import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
-import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+// import 'package:link/ui/createPost/CreatePostScreen.dart';
+// import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
+// import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
+// import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
 import 'package:link/ui/notifications/NotificationsScreen.dart';
 import 'package:link/ui/profileSettings/ProfileSettingsScreen.dart';
-import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
+// import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+//import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
@@ -42,9 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late User user;
   FireStoreUtils _fireStoreUtils = FireStoreUtils();
   late Future<List<User>> _friendsFuture;
-  late Stream<List<PostModel>> _userPosts;
-  late Future<List<SocialReactionModel>> _myReactions;
-  List<SocialReactionModel?> _reactionsList = [];
+  // late Stream<List<PostModel>> _userPosts;
+  // late Future<List<SocialReactionModel>> _myReactions;
+  // List<SocialReactionModel?> _reactionsList = [];
   Future<String>? _profileRelationFuture;
   String? _profileRelation;
   List<User> _friends = [];
@@ -52,12 +52,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     user = widget.user;
-    _friendsFuture = _fireStoreUtils.getUserFriendsForProfile(user.userID);
-    _myReactions = _fireStoreUtils.getMyReactions()
-      ..then((value) {
-        _reactionsList.addAll(value);
-      });
-    _userPosts = _fireStoreUtils.getProfilePosts(user.userID);
+    _friendsFuture = _fireStoreUtils.getUserContactsForProfile(user.userID);
+    // _myReactions = _fireStoreUtils.getMyReactions()
+    //   ..then((value) {
+    //     _reactionsList.addAll(value);
+    //   });
+    // _userPosts = _fireStoreUtils.getProfilePosts(user.userID);
     if (user.userID != MyAppState.currentUser!.userID)
       _profileRelationFuture =
           _fireStoreUtils.getUserSocialRelation(user.userID);
@@ -209,8 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-                          child: showEmptyState(
-                              'noFriendsFound'.tr(), 'feelsLonely'.tr())),
+                          child: showEmptyState('noContactsFound'.tr(), '')),
                     );
                   _friends = snapshot.data!;
                   Future.delayed(Duration(milliseconds: 300), () {
@@ -261,43 +260,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            StreamBuilder<List<PostModel>>(
-              stream: _userPosts,
-              initialData: [],
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: CircularProgressIndicator.adaptive()),
-                  );
-                if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true))
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 30),
-                      child: Center(
-                        child: showEmptyState(
-                            'noPostsFound'.tr(),
-                            widget.user.userID == MyAppState.currentUser!.userID
-                                ? 'allYourPostsWillShowUpHere'.tr()
-                                : 'haveNotPublishedAnyPosts'
-                                    .tr(args: ['${widget.user.firstName}']),
-                            buttonTitle: 'createPost'.tr(),
-                            isDarkMode: isDarkMode(context),
-                            action: widget.user.userID ==
-                                    MyAppState.currentUser!.userID
-                                ? () => push(context, CreatePostScreen())
-                                : null),
-                      ));
+            // StreamBuilder<List<PostModel>>(
+            //   stream: _userPosts,
+            //   initialData: [],
+            //   builder: (context, snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting)
+            //       return Padding(
+            //         padding: const EdgeInsets.all(8.0),
+            //         child: Center(child: CircularProgressIndicator.adaptive()),
+            //       );
+            //     if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true))
+            //       return Padding(
+            //           padding: const EdgeInsets.symmetric(
+            //               horizontal: 32.0, vertical: 30),
+            //           child: Center(
+            //             child: showEmptyState(
+            //                 'noPostsFound'.tr(),
+            //                 widget.user.userID == MyAppState.currentUser!.userID
+            //                     ? 'allYourPostsWillShowUpHere'.tr()
+            //                     : 'haveNotPublishedAnyPosts'
+            //                         .tr(args: ['${widget.user.firstName}']),
+            //                 buttonTitle: 'createPost'.tr(),
+            //                 isDarkMode: isDarkMode(context),
+            //                 action: widget.user.userID ==
+            //                         MyAppState.currentUser!.userID
+            //                     ? () => push(context, CreatePostScreen())
+            //                     : null),
+            //           ));
 
-                return ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) =>
-                        _buildPostWidget(snapshot.data![index]));
-              },
-            ),
+            //     return ListView.builder(
+            //         shrinkWrap: true,
+            //         padding: EdgeInsets.symmetric(vertical: 4),
+            //         physics: NeverScrollableScrollPhysics(),
+            //         itemCount: snapshot.data!.length,
+            //         itemBuilder: (context, index) =>
+            //             _buildPostWidget(snapshot.data![index]));
+            //   },
+            // ),
           ],
         ),
       ),
@@ -416,473 +415,473 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _buildPostWidget(PostModel post) {
-    PageController _controller = PageController(
-      initialPage: 0,
-    );
-    return GestureDetector(
-      onTap: () {
-        _showDetailedPost(post, post.myReaction);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () => push(
-                            context,
-                            ProfileScreen(
-                                user: post.author, fromContainer: false)),
-                        child: displayCircleImage(
-                            post.author.profilePictureURL, 55, false),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              post.author.fullName(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17),
-                            ),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                              setLastSeen(post.createdAt.seconds),
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            if (post.location.isNotEmpty ||
-                                post.location != 'Unknown Location')
-                              Text(post.location),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  post.postText.isEmpty
-                      ? SizedBox(height: 8)
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            post.postText,
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.grey.shade200
-                                    : Colors.grey.shade900),
-                          ),
-                        ),
-                  if (post.postMedia.isNotEmpty)
-                    Container(
-                      height: 250,
-                      child: Stack(
-                        children: [
-                          PageView.builder(
-                            controller: _controller,
-                            itemCount: post.postMedia.length,
-                            itemBuilder: (context, index) {
-                              Url postMedia = post.postMedia[index];
-                              if (postMedia.mime.contains('video')) {
-                                return Container(
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        image: post.postMedia[index]
-                                                        .videoThumbnail !=
-                                                    null &&
-                                                post.postMedia[index]
-                                                    .videoThumbnail!.isNotEmpty
-                                            ? DecorationImage(
-                                                image: Image.network(post
-                                                        .postMedia[index]
-                                                        .videoThumbnail!)
-                                                    .image)
-                                            : null),
-                                    child: Center(
-                                      child: FloatingActionButton(
-                                        child: Icon(
-                                            CupertinoIcons.play_arrow_solid),
-                                        backgroundColor: Colors.white54,
-                                        heroTag: post.id,
-                                        onPressed: () => push(
-                                            context,
-                                            FullScreenVideoViewer(
-                                                videoUrl: postMedia.url,
-                                                heroTag: post.id)),
-                                      ),
-                                    ));
-                              } else if (postMedia.mime.contains('image')) {
-                                return GestureDetector(
-                                    onTap: () => push(
-                                        context,
-                                        FullScreenImageViewer(
-                                            imageUrl: postMedia.url)),
-                                    child: displayImage(postMedia.url, 150));
-                              } else {
-                                return Container();
-                              }
-                            },
-                          ),
-                          if (post.postMedia.length > 1)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 30.0),
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: SmoothPageIndicator(
-                                  controller: _controller,
-                                  count: post.postMedia.length,
-                                  effect: ScrollingDotsEffect(
-                                      dotWidth: 6,
-                                      dotHeight: 6,
-                                      dotColor: isDarkMode(context)
-                                          ? Colors.white54
-                                          : Colors.black54,
-                                      activeDotColor: Color(COLOR_PRIMARY)),
-                                ),
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                  Row(
-                    children: [
-                      SizedBox(width: 6),
-                      FutureBuilder<List<SocialReactionModel>>(
-                        future: _myReactions,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            SocialReactionModel? _postReaction;
+  // _buildPostWidget(PostModel post) {
+  //   PageController _controller = PageController(
+  //     initialPage: 0,
+  //   );
+  //   return GestureDetector(
+  //     onTap: () {
+  //       _showDetailedPost(post, post.myReaction);
+  //     },
+  //     child: Padding(
+  //       padding: const EdgeInsets.symmetric(vertical: 4.0),
+  //       child: Card(
+  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  //         child: Stack(
+  //           children: [
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 SizedBox(height: 8),
+  //                 Row(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     SizedBox(width: 8),
+  //                     GestureDetector(
+  //                       onTap: () => push(
+  //                           context,
+  //                           ProfileScreen(
+  //                               user: post.author, fromContainer: false)),
+  //                       child: displayCircleImage(
+  //                           post.author.profilePictureURL, 55, false),
+  //                     ),
+  //                     SizedBox(width: 16),
+  //                     Expanded(
+  //                       child: Column(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         mainAxisSize: MainAxisSize.max,
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Text(
+  //                             post.author.fullName(),
+  //                             style: TextStyle(
+  //                                 fontWeight: FontWeight.bold, fontSize: 17),
+  //                           ),
+  //                           SizedBox(
+  //                             height: 2,
+  //                           ),
+  //                           Text(
+  //                             setLastSeen(post.createdAt.seconds),
+  //                             style:
+  //                                 TextStyle(color: Colors.grey, fontSize: 12),
+  //                           ),
+  //                           if (post.location.isNotEmpty ||
+  //                               post.location != 'Unknown Location')
+  //                             Text(post.location),
+  //                         ],
+  //                       ),
+  //                     )
+  //                   ],
+  //                 ),
+  //                 post.postText.isEmpty
+  //                     ? SizedBox(height: 8)
+  //                     : Padding(
+  //                         padding: const EdgeInsets.all(8.0),
+  //                         child: Text(
+  //                           post.postText,
+  //                           style: TextStyle(
+  //                               color: isDarkMode(context)
+  //                                   ? Colors.grey.shade200
+  //                                   : Colors.grey.shade900),
+  //                         ),
+  //                       ),
+  //                 if (post.postMedia.isNotEmpty)
+  //                   Container(
+  //                     height: 250,
+  //                     child: Stack(
+  //                       children: [
+  //                         PageView.builder(
+  //                           controller: _controller,
+  //                           itemCount: post.postMedia.length,
+  //                           itemBuilder: (context, index) {
+  //                             Url postMedia = post.postMedia[index];
+  //                             if (postMedia.mime.contains('video')) {
+  //                               return Container(
+  //                                   height: 150,
+  //                                   decoration: BoxDecoration(
+  //                                       color: Colors.black,
+  //                                       image: post.postMedia[index]
+  //                                                       .videoThumbnail !=
+  //                                                   null &&
+  //                                               post.postMedia[index]
+  //                                                   .videoThumbnail!.isNotEmpty
+  //                                           ? DecorationImage(
+  //                                               image: Image.network(post
+  //                                                       .postMedia[index]
+  //                                                       .videoThumbnail!)
+  //                                                   .image)
+  //                                           : null),
+  //                                   child: Center(
+  //                                     child: FloatingActionButton(
+  //                                       child: Icon(
+  //                                           CupertinoIcons.play_arrow_solid),
+  //                                       backgroundColor: Colors.white54,
+  //                                       heroTag: post.id,
+  //                                       onPressed: () => push(
+  //                                           context,
+  //                                           FullScreenVideoViewer(
+  //                                               videoUrl: postMedia.url,
+  //                                               heroTag: post.id)),
+  //                                     ),
+  //                                   ));
+  //                             } else if (postMedia.mime.contains('image')) {
+  //                               return GestureDetector(
+  //                                   onTap: () => push(
+  //                                       context,
+  //                                       FullScreenImageViewer(
+  //                                           imageUrl: postMedia.url)),
+  //                                   child: displayImage(postMedia.url, 150));
+  //                             } else {
+  //                               return Container();
+  //                             }
+  //                           },
+  //                         ),
+  //                         if (post.postMedia.length > 1)
+  //                           Padding(
+  //                             padding: const EdgeInsets.only(bottom: 30.0),
+  //                             child: Align(
+  //                               alignment: Alignment.bottomCenter,
+  //                               child: SmoothPageIndicator(
+  //                                 controller: _controller,
+  //                                 count: post.postMedia.length,
+  //                                 effect: ScrollingDotsEffect(
+  //                                     dotWidth: 6,
+  //                                     dotHeight: 6,
+  //                                     dotColor: isDarkMode(context)
+  //                                         ? Colors.white54
+  //                                         : Colors.black54,
+  //                                     activeDotColor: Color(COLOR_PRIMARY)),
+  //                               ),
+  //                             ),
+  //                           )
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 Row(
+  //                   children: [
+  //                     SizedBox(width: 6),
+  //                     FutureBuilder<List<SocialReactionModel>>(
+  //                       future: _myReactions,
+  //                       builder: (context, snapshot) {
+  //                         if (snapshot.hasData) {
+  //                           SocialReactionModel? _postReaction;
 
-                            if (snapshot.data!.isNotEmpty) {
-                              _postReaction = _reactionsList.firstWhereOrNull(
-                                  (element) => element?.postID == post.id);
-                              if (_postReaction != null) {
-                                switch (_postReaction.reaction) {
-                                  case 'like':
-                                    post.myReaction = Reaction(
-                                      id: 1,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like_fill.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  case 'love':
-                                    post.myReaction = Reaction(
-                                      id: 2,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/love.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/love.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  case 'surprised':
-                                    post.myReaction = Reaction(
-                                      id: 3,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/wow.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/wow.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  case 'laugh':
-                                    post.myReaction = Reaction(
-                                      id: 4,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/haha.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/haha.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  case 'sad':
-                                    post.myReaction = Reaction(
-                                      id: 5,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/sad.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/sad.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  case 'angry':
-                                    post.myReaction = Reaction(
-                                      id: 6,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/angry.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/angry.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                  default:
-                                    post.myReaction = Reaction(
-                                      id: 0,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.png'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like.png'),
-                                      value: null,
-                                    );
-                                    break;
-                                }
-                              }
-                            }
-                            /* This is the location of the commented out code */
-                            /* return FlutterReactionButtonCheck(
-                              onReactionChanged: (reaction, index, isChecked) {
-                                setState(() {
-                                  post.myReaction = Reaction(
-                                      value: reaction!.value,
-                                      icon: reaction.icon,
-                                      previewIcon: reaction.previewIcon);
-                                });
-                                if (isChecked) {
-                                  bool isNewReaction = false;
-                                  SocialReactionModel? postReaction =
-                                      _reactionsList.firstWhere(
-                                          (element) =>
-                                              element?.postID == post.id,
-                                          orElse: () {
-                                    isNewReaction = true;
-                                    String reactionString =
-                                        getReactionString(reaction!.id!);
-                                    SocialReactionModel newReaction =
-                                        SocialReactionModel(
-                                            postID: post.id,
-                                            createdAt: Timestamp.now(),
-                                            reactionAuthorID:
-                                                MyAppState.currentUser!.userID,
-                                            reaction: reactionString);
-                                    _reactionsList.add(newReaction);
-                                    return newReaction;
-                                  });
-                                  if (isNewReaction) {
-                                    setState(() {
-                                      post.reactionsCount++;
-                                    });
-                                    _fireStoreUtils.postReaction(
-                                        postReaction!, post);
-                                  } else {
-                                    postReaction!.reaction =
-                                        getReactionString(reaction!.id!);
-                                    postReaction.createdAt = Timestamp.now();
-                                    _fireStoreUtils.updateReaction(
-                                        postReaction, post);
-                                  }
-                                } else {
-                                  _reactionsList.removeWhere(
-                                      (element) => element!.postID == post.id);
-                                  setState(() {
-                                    post.reactionsCount--;
-                                  });
-                                  _fireStoreUtils.removeReaction(post);
-                                }
-                              },
-                              isChecked: post.myReaction.value != 0,
-                              reactions: facebookReactions,
-                              initialReaction: Reaction(
-                                  id: 0,
-                                  previewIcon: Container(
-                                    color: Colors.transparent,
-                                    child: Image.asset(
-                                      'assets/images/like.png',
-                                      height: 20,
-                                      color: isDarkMode(context)
-                                          ? Colors.grey.shade200
-                                          : null,
-                                    ),
-                                  ),
-                                  icon: Container(
-                                    color: Colors.transparent,
-                                    child: Image.asset(
-                                      'assets/images/like.png',
-                                      height: 20,
-                                      color: isDarkMode(context)
-                                          ? Colors.grey.shade200
-                                          : null,
-                                    ),
-                                  ),
-                                  value: null),
-                              selectedReaction: post.myReaction.value != 0
-                                  ? facebookReactions[post.myReaction.value - 1]
-                                  : facebookReactions[0],
-                            ); */
+  //                           if (snapshot.data!.isNotEmpty) {
+  //                             _postReaction = _reactionsList.firstWhereOrNull(
+  //                                 (element) => element?.postID == post.id);
+  //                             if (_postReaction != null) {
+  //                               switch (_postReaction.reaction) {
+  //                                 case 'like':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 1,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/like.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/like_fill.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 case 'love':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 2,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/love.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/love.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 case 'surprised':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 3,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/wow.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/wow.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 case 'laugh':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 4,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/haha.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/haha.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 case 'sad':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 5,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/sad.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/sad.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 case 'angry':
+  //                                   post.myReaction = Reaction(
+  //                                     id: 6,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/angry.gif'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/angry.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                                 default:
+  //                                   post.myReaction = Reaction(
+  //                                     id: 0,
+  //                                     previewIcon: buildPreviewIconFacebook(
+  //                                         'assets/images/like.png'),
+  //                                     icon: buildIconFacebook(
+  //                                         'assets/images/like.png'),
+  //                                     value: null,
+  //                                   );
+  //                                   break;
+  //                               }
+  //                             }
+  //                           }
+  //                           /* This is the location of the commented out code */
+  //                           /* return FlutterReactionButtonCheck(
+  //                             onReactionChanged: (reaction, index, isChecked) {
+  //                               setState(() {
+  //                                 post.myReaction = Reaction(
+  //                                     value: reaction!.value,
+  //                                     icon: reaction.icon,
+  //                                     previewIcon: reaction.previewIcon);
+  //                               });
+  //                               if (isChecked) {
+  //                                 bool isNewReaction = false;
+  //                                 SocialReactionModel? postReaction =
+  //                                     _reactionsList.firstWhere(
+  //                                         (element) =>
+  //                                             element?.postID == post.id,
+  //                                         orElse: () {
+  //                                   isNewReaction = true;
+  //                                   String reactionString =
+  //                                       getReactionString(reaction!.id!);
+  //                                   SocialReactionModel newReaction =
+  //                                       SocialReactionModel(
+  //                                           postID: post.id,
+  //                                           createdAt: Timestamp.now(),
+  //                                           reactionAuthorID:
+  //                                               MyAppState.currentUser!.userID,
+  //                                           reaction: reactionString);
+  //                                   _reactionsList.add(newReaction);
+  //                                   return newReaction;
+  //                                 });
+  //                                 if (isNewReaction) {
+  //                                   setState(() {
+  //                                     post.reactionsCount++;
+  //                                   });
+  //                                   _fireStoreUtils.postReaction(
+  //                                       postReaction!, post);
+  //                                 } else {
+  //                                   postReaction!.reaction =
+  //                                       getReactionString(reaction!.id!);
+  //                                   postReaction.createdAt = Timestamp.now();
+  //                                   _fireStoreUtils.updateReaction(
+  //                                       postReaction, post);
+  //                                 }
+  //                               } else {
+  //                                 _reactionsList.removeWhere(
+  //                                     (element) => element!.postID == post.id);
+  //                                 setState(() {
+  //                                   post.reactionsCount--;
+  //                                 });
+  //                                 _fireStoreUtils.removeReaction(post);
+  //                               }
+  //                             },
+  //                             isChecked: post.myReaction.value != 0,
+  //                             reactions: facebookReactions,
+  //                             initialReaction: Reaction(
+  //                                 id: 0,
+  //                                 previewIcon: Container(
+  //                                   color: Colors.transparent,
+  //                                   child: Image.asset(
+  //                                     'assets/images/like.png',
+  //                                     height: 20,
+  //                                     color: isDarkMode(context)
+  //                                         ? Colors.grey.shade200
+  //                                         : null,
+  //                                   ),
+  //                                 ),
+  //                                 icon: Container(
+  //                                   color: Colors.transparent,
+  //                                   child: Image.asset(
+  //                                     'assets/images/like.png',
+  //                                     height: 20,
+  //                                     color: isDarkMode(context)
+  //                                         ? Colors.grey.shade200
+  //                                         : null,
+  //                                   ),
+  //                                 ),
+  //                                 value: null),
+  //                             selectedReaction: post.myReaction.value != 0
+  //                                 ? facebookReactions[post.myReaction.value - 1]
+  //                                 : facebookReactions[0],
+  //                           ); */
 
-                            return Container();
-                          } else {
-                            return Container();
-                          }
-                        },
-                      ),
-                      SizedBox(width: 6),
-                      if (post.reactionsCount.round() != 0)
-                        Text('${post.reactionsCount.round()}'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                            child: Icon(
-                              CupertinoIcons.conversation_bubble,
-                              size: 20,
-                              color: isDarkMode(context)
-                                  ? Colors.grey.shade200
-                                  : null,
-                            ),
-                            onTap: () => _showCommentsSheet(post)),
-                      ),
-                      if (post.commentCount.round() != 0)
-                        Text('${post.commentCount.round()}'),
-                    ],
-                  ),
-                ],
-              ),
-              Positioned.directional(
-                textDirection: Directionality.of(context),
-                top: 0,
-                end: 0,
-                child: IconButton(
-                  icon: Icon(
-                    CupertinoIcons.ellipsis,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () => _postSettingsMenu(post),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  //                           return Container();
+  //                         } else {
+  //                           return Container();
+  //                         }
+  //                       },
+  //                     ),
+  //                     SizedBox(width: 6),
+  //                     if (post.reactionsCount.round() != 0)
+  //                       Text('${post.reactionsCount.round()}'),
+  //                     Padding(
+  //                       padding: const EdgeInsets.all(8.0),
+  //                       child: InkWell(
+  //                           child: Icon(
+  //                             CupertinoIcons.conversation_bubble,
+  //                             size: 20,
+  //                             color: isDarkMode(context)
+  //                                 ? Colors.grey.shade200
+  //                                 : null,
+  //                           ),
+  //                           onTap: () => _showCommentsSheet(post)),
+  //                     ),
+  //                     if (post.commentCount.round() != 0)
+  //                       Text('${post.commentCount.round()}'),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //             Positioned.directional(
+  //               textDirection: Directionality.of(context),
+  //               top: 0,
+  //               end: 0,
+  //               child: IconButton(
+  //                 icon: Icon(
+  //                   CupertinoIcons.ellipsis,
+  //                   color: Colors.grey,
+  //                 ),
+  //                 onPressed: () => _postSettingsMenu(post),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  _showCommentsSheet(PostModel post) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
-      ),
-      builder: (context) {
-        return SocialCommentsScreen(post: post);
-      },
-    );
-  }
+  // _showCommentsSheet(PostModel post) {
+  //   showModalBottomSheet(
+  //     isScrollControlled: true,
+  //     context: context,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(
+  //         top: Radius.circular(20),
+  //       ),
+  //     ),
+  //     builder: (context) {
+  //       return SocialCommentsScreen(post: post);
+  //     },
+  //   );
+  // }
 
-  _postSettingsMenu(PostModel post) {
-    final action = CupertinoActionSheet(
-      message: Text(
-        'postSettings',
-        style: TextStyle(fontSize: 15.0),
-      ).tr(),
-      actions: [
-        if (user.userID != MyAppState.currentUser!.userID)
-          CupertinoActionSheetAction(
-            child: Text('block').tr(),
-            onPressed: () async {
-              Navigator.pop(context);
-              showProgress(context, 'blockingUser'.tr(), false);
-              bool isSuccessful =
-                  await _fireStoreUtils.blockUser(post.author, 'block');
-              hideProgress();
-              if (isSuccessful) {
-                Navigator.pop(context);
-                showAlertDialog(
-                    context,
-                    'block'.tr(),
-                    'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']),
-                    false);
-              } else {
-                showAlertDialog(
-                    context,
-                    'block'.tr(),
-                    'couldNotBlock'.tr(args: ['${post.author.fullName()}']),
-                    false);
-              }
-            },
-          ),
-        if (user.userID != MyAppState.currentUser!.userID)
-          CupertinoActionSheetAction(
-            child: Text('reportPost').tr(),
-            onPressed: () async {
-              Navigator.pop(context);
-              showProgress(context, 'reportingPost'.tr(), false);
-              bool isSuccessful =
-                  await _fireStoreUtils.blockUser(post.author, 'report');
-              hideProgress();
-              if (isSuccessful) {
-                Navigator.pop(context);
-                showAlertDialog(
-                    context,
-                    'report'.tr(),
-                    'postHasBeenReported'
-                        .tr(args: ['${post.author.fullName()}']),
-                    false);
-              } else {
-                showAlertDialog(
-                    context,
-                    'report'.tr(),
-                    'couldnNotReportPost'
-                        .tr(args: ['${post.author.fullName()}']),
-                    false);
-              }
-            },
-          ),
-        CupertinoActionSheetAction(
-          child: Text('sharePost').tr(),
-          onPressed: () async {
-            Navigator.pop(context);
-            sharePost(post);
-          },
-        ),
-        if (user.userID == MyAppState.currentUser!.userID)
-          CupertinoActionSheetAction(
-            child: Text('deletePost').tr(),
-            isDestructiveAction: true,
-            onPressed: () async {
-              Navigator.pop(context);
-              showProgress(context, 'deletingPost'.tr(), false);
-              await _fireStoreUtils.deletePost(post);
-              hideProgress();
-            },
-          ),
-      ],
-      cancelButton: CupertinoActionSheetAction(
-        child: Text('cancel').tr(),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
-    showCupertinoModalPopup(context: context, builder: (context) => action);
-  }
+  // _postSettingsMenu(PostModel post) {
+  //   final action = CupertinoActionSheet(
+  //     message: Text(
+  //       'postSettings',
+  //       style: TextStyle(fontSize: 15.0),
+  //     ).tr(),
+  //     actions: [
+  //       if (user.userID != MyAppState.currentUser!.userID)
+  //         CupertinoActionSheetAction(
+  //           child: Text('block').tr(),
+  //           onPressed: () async {
+  //             Navigator.pop(context);
+  //             showProgress(context, 'blockingUser'.tr(), false);
+  //             bool isSuccessful =
+  //                 await _fireStoreUtils.blockUser(post.author, 'block');
+  //             hideProgress();
+  //             if (isSuccessful) {
+  //               Navigator.pop(context);
+  //               showAlertDialog(
+  //                   context,
+  //                   'block'.tr(),
+  //                   'hasBeenBlocked'.tr(args: ['${post.author.fullName()}']),
+  //                   false);
+  //             } else {
+  //               showAlertDialog(
+  //                   context,
+  //                   'block'.tr(),
+  //                   'couldNotBlock'.tr(args: ['${post.author.fullName()}']),
+  //                   false);
+  //             }
+  //           },
+  //         ),
+  //       if (user.userID != MyAppState.currentUser!.userID)
+  //         CupertinoActionSheetAction(
+  //           child: Text('reportPost').tr(),
+  //           onPressed: () async {
+  //             Navigator.pop(context);
+  //             showProgress(context, 'reportingPost'.tr(), false);
+  //             bool isSuccessful =
+  //                 await _fireStoreUtils.blockUser(post.author, 'report');
+  //             hideProgress();
+  //             if (isSuccessful) {
+  //               Navigator.pop(context);
+  //               showAlertDialog(
+  //                   context,
+  //                   'report'.tr(),
+  //                   'postHasBeenReported'
+  //                       .tr(args: ['${post.author.fullName()}']),
+  //                   false);
+  //             } else {
+  //               showAlertDialog(
+  //                   context,
+  //                   'report'.tr(),
+  //                   'couldnNotReportPost'
+  //                       .tr(args: ['${post.author.fullName()}']),
+  //                   false);
+  //             }
+  //           },
+  //         ),
+  //       CupertinoActionSheetAction(
+  //         child: Text('sharePost').tr(),
+  //         onPressed: () async {
+  //           Navigator.pop(context);
+  //           sharePost(post);
+  //         },
+  //       ),
+  //       if (user.userID == MyAppState.currentUser!.userID)
+  //         CupertinoActionSheetAction(
+  //           child: Text('deletePost').tr(),
+  //           isDestructiveAction: true,
+  //           onPressed: () async {
+  //             Navigator.pop(context);
+  //             showProgress(context, 'deletingPost'.tr(), false);
+  //             await _fireStoreUtils.deletePost(post);
+  //             hideProgress();
+  //           },
+  //         ),
+  //     ],
+  //     cancelButton: CupertinoActionSheetAction(
+  //       child: Text('cancel').tr(),
+  //       onPressed: () {
+  //         Navigator.pop(context);
+  //       },
+  //     ),
+  //   );
+  //   showCupertinoModalPopup(context: context, builder: (context) => action);
+  // }
 
-  void _showDetailedPost(PostModel post, Reaction defaultInitialReaction) {
-    push(
-        context,
-        DetailedPostScreen(
-          post: post,
-          postReaction: defaultInitialReaction,
-          reactions: _reactionsList,
-        ));
-  }
+  // void _showDetailedPost(PostModel post, Reaction defaultInitialReaction) {
+  //   push(
+  //       context,
+  //       DetailedPostScreen(
+  //         post: post,
+  //         postReaction: defaultInitialReaction,
+  //         reactions: _reactionsList,
+  //       ));
+  // }
 }
