@@ -19,7 +19,7 @@ class _AllFriendsScreenState extends State<AllFriendsScreen> {
 
   @override
   void initState() {
-    _friends = _fireStoreUtils.getFriends(widget.user.userID);
+    _friends = _fireStoreUtils.getContacts(widget.user.userID);
     _fireStoreUtils.getBlocks().listen((shouldRefresh) {
       if (shouldRefresh) {
         if (mounted) setState(() {});
@@ -46,7 +46,7 @@ class _AllFriendsScreenState extends State<AllFriendsScreen> {
               return Center(
                   child: Padding(
                 padding: const EdgeInsets.only(bottom: 120.0),
-                child: showEmptyState('noFriendsFound'.tr(),
+                child: showEmptyState('noContactsFound'.tr(),
                     'allFriendsWillShowUpHereOnceConfirmed'.tr()),
               ));
             return ListView.separated(

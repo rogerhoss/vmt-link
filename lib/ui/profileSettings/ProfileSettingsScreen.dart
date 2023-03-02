@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
+// import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:link/constants.dart';
@@ -11,7 +11,7 @@ import 'package:link/services/helper.dart';
 import 'package:link/ui/accountDetails/AccountDetailsScreen.dart';
 import 'package:link/ui/auth/AuthScreen.dart';
 import 'package:link/ui/contactUs/ContactUsScreen.dart';
-import 'package:link/ui/reauthScreen/reauth_user_screen.dart';
+// import 'package:link/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:link/ui/settings/SettingsScreen.dart';
 
 class ProfileSettingsScreen extends StatefulWidget {
@@ -33,15 +33,15 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Profile Settings ',
-              style: TextStyle(
-                  color: isDarkMode(context) ? Colors.white54 : Colors.black54,
-                  fontSize: 17),
-            ).tr(),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Text(
+          //     'Profile Settings ',
+          //     style: TextStyle(
+          //         color: isDarkMode(context) ? Colors.white54 : Colors.black54,
+          //         fontSize: 17),
+          //   ).tr(),
+          // ),
           CupertinoButton(
               borderRadius: BorderRadius.circular(0),
               child: Text(
@@ -68,55 +68,55 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
           Divider(
             height: 0,
           ),
-          CupertinoButton(
-            borderRadius: BorderRadius.circular(0),
-            child: Text(
-              'Delete Account'.tr(),
-              style: TextStyle(fontSize: 16, color: Color(COLOR_PRIMARY)),
-            ),
-            color: isDarkMode(context) ? Colors.black38 : Colors.white,
-            onPressed: () async {
-              AuthProviders? authProvider;
-              List<auth.UserInfo> userInfoList =
-                  auth.FirebaseAuth.instance.currentUser?.providerData ?? [];
-              await Future.forEach(userInfoList, (auth.UserInfo info) {
-                switch (info.providerId) {
-                  case 'password':
-                    authProvider = AuthProviders.PASSWORD;
-                    break;
-                  case 'phone':
-                    authProvider = AuthProviders.PHONE;
-                    break;
-                  case 'facebook.com':
-                    authProvider = AuthProviders.FACEBOOK;
-                    break;
-                  case 'apple.com':
-                    authProvider = AuthProviders.APPLE;
-                    break;
-                }
-              });
-              bool? result = await showDialog(
-                context: context,
-                builder: (context) => ReAuthUserScreen(
-                  provider: authProvider!,
-                  email: auth.FirebaseAuth.instance.currentUser!.email,
-                  phoneNumber:
-                      auth.FirebaseAuth.instance.currentUser!.phoneNumber,
-                  deleteUser: true,
-                ),
-              );
-              if (result != null && result) {
-                await showProgress(context, 'Deleting account...'.tr(), false);
-                await FireStoreUtils.deleteUser();
-                await hideProgress();
-                MyAppState.currentUser = null;
-                pushAndRemoveUntil(context, AuthScreen(), false);
-              }
-            },
-          ),
-          Divider(
-            height: 0,
-          ),
+          // CupertinoButton(
+          //   borderRadius: BorderRadius.circular(0),
+          //   child: Text(
+          //     'Delete Account'.tr(),
+          //     style: TextStyle(fontSize: 16, color: Color(COLOR_PRIMARY)),
+          //   ),
+          //   color: isDarkMode(context) ? Colors.black38 : Colors.white,
+          //   onPressed: () async {
+          //     AuthProviders? authProvider;
+          //     List<auth.UserInfo> userInfoList =
+          //         auth.FirebaseAuth.instance.currentUser?.providerData ?? [];
+          //     await Future.forEach(userInfoList, (auth.UserInfo info) {
+          //       switch (info.providerId) {
+          //         case 'password':
+          //           authProvider = AuthProviders.PASSWORD;
+          //           break;
+          //         case 'phone':
+          //           authProvider = AuthProviders.PHONE;
+          //           break;
+          //         case 'facebook.com':
+          //           authProvider = AuthProviders.FACEBOOK;
+          //           break;
+          //         case 'apple.com':
+          //           authProvider = AuthProviders.APPLE;
+          //           break;
+          //       }
+          //     });
+          //     bool? result = await showDialog(
+          //       context: context,
+          //       builder: (context) => ReAuthUserScreen(
+          //         provider: authProvider!,
+          //         email: auth.FirebaseAuth.instance.currentUser!.email,
+          //         phoneNumber:
+          //             auth.FirebaseAuth.instance.currentUser!.phoneNumber,
+          //         deleteUser: true,
+          //       ),
+          //     );
+          //     if (result != null && result) {
+          //       await showProgress(context, 'Deleting account...'.tr(), false);
+          //       await FireStoreUtils.deleteUser();
+          //       await hideProgress();
+          //       MyAppState.currentUser = null;
+          //       pushAndRemoveUntil(context, AuthScreen(), false);
+          //     }
+          //   },
+          // ),
+          // Divider(
+          //   height: 0,
+          // ),
           CupertinoButton(
             borderRadius: BorderRadius.circular(0),
             onPressed: () {

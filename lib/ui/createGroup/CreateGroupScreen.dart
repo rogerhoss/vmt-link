@@ -23,7 +23,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   void initState() {
     super.initState();
-    _futureUsers = _fireStoreUtils.getFriends(MyAppState.currentUser!.userID);
+    _futureUsers = _fireStoreUtils.getContacts(MyAppState.currentUser!.userID);
     _fireStoreUtils.getBlocks().listen((shouldRefresh) {
       if (shouldRefresh) {
         if (mounted) setState(() {});

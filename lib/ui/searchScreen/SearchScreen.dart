@@ -40,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
         if (mounted) setState(() {});
       }
     });
-    _future = fireStoreUtils.getContacts(user.userID, true);
+    _future = fireStoreUtils.getPeople(user.userID, false);
   }
 
   Widget _buildSearchField() => TextField(
@@ -220,14 +220,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                           hideProgress();
                                           setState(() {});
                                         },
-                                        child: Text(
-                                          getStatusByType(contact.type),
-                                          style: TextStyle(
-                                              color: isDarkMode(context)
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ).tr()),
+                                        child: Icon(
+                                          getContactStatus(contact.type),
+                                          size: 30,
+                                          color: isDarkMode(context)
+                                              ? Colors.black
+                                              : Colors.white,
+                                        )),
                                   ),
                                 ),
                                 Divider()
@@ -289,25 +288,24 @@ class _SearchScreenState extends State<SearchScreen> {
                                         style: TextButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(20)),
+                                                  BorderRadius.circular(10)),
                                           backgroundColor: isDarkMode(context)
                                               ? Colors.grey.shade700
                                               : Colors.grey.shade200,
                                         ),
                                         onPressed: () async {
                                           await _onContactButtonClicked(
-                                              contact, index, false);
+                                              contact, index, true);
                                           hideProgress();
                                           setState(() {});
                                         },
-                                        child: Text(
-                                          getStatusByType(contact.type),
-                                          style: TextStyle(
-                                              color: isDarkMode(context)
-                                                  ? Colors.white
-                                                  : Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                        ).tr()),
+                                        child: Icon(
+                                          getContactStatus(contact.type),
+                                          size: 30,
+                                          color: isDarkMode(context)
+                                              ? Colors.black
+                                              : Colors.white,
+                                        )),
                                   ),
                                 ),
                                 Divider()
@@ -345,44 +343,28 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
-  String getStatusByType(ContactType type) {
+  IconData? getContactStatus(ContactType type) {
     switch (type) {
-      case ContactType.ACCEPT:
-        return 'accept';
-      case ContactType.PENDING:
-        return 'cancel';
+      // case ContactType.ACCEPT:
+      //   return 'accept';
+      // case ContactType.PENDING:
+      //   return 'cancel';
       case ContactType.FRIEND:
-        return 'unfriend';
+        return CupertinoIcons.person_crop_square_fill;
       case ContactType.UNKNOWN:
-        return 'addFriend';
-      case ContactType.BLOCKED:
-        return 'unblock';
-      default:
-        return 'addFriend';
+        return CupertinoIcons.person_crop_square;
+      // // case ContactType.BLOCKED:
+      // //   return 'unblock';
+      // default:
     }
   }
 
   _onContactButtonClicked(
       ContactModel contact, int index, bool fromSearch) async {
     switch (contact.type) {
-      case ContactType.ACCEPT:
-        showProgress(context, 'acceptingFriendship'.tr(), false);
-        await fireStoreUtils.onFriendAccept(contact.user, false);
-
-        if (fromSearch) {
-          _searchResult[index].type = ContactType.FRIEND;
-          _contacts
-              .where((user) => user.user.userID == contact.user.userID)
-              .first
-              .type = ContactType.FRIEND;
-        } else {
-          _contacts[index].type = ContactType.FRIEND;
-        }
-
-        break;
       case ContactType.FRIEND:
-        showProgress(context, 'removingFriendship'.tr(), false);
-        await fireStoreUtils.onUnFriend(contact.user, false);
+        showProgress(context, 'removingFromContacts'.tr(), false);
+        await fireStoreUtils.removeFromContacts(contact.user, false);
         if (fromSearch) {
           _searchResult[index].type = ContactType.UNKNOWN;
           _contacts
@@ -392,33 +374,17 @@ class _SearchScreenState extends State<SearchScreen> {
         } else {
           _contacts[index].type = ContactType.UNKNOWN;
         }
-        break;
-      case ContactType.PENDING:
-        showProgress(context, 'removingFriendshipRequest'.tr(), false);
-        await fireStoreUtils.onCancelRequest(contact.user, false);
-        if (fromSearch) {
-          _searchResult[index].type = ContactType.UNKNOWN;
-          _contacts
-              .where((user) => user.user.userID == contact.user.userID)
-              .first
-              .type = ContactType.UNKNOWN;
-        } else {
-          _contacts[index].type = ContactType.UNKNOWN;
-        }
-
-        break;
-      case ContactType.BLOCKED:
         break;
       case ContactType.UNKNOWN:
-        showProgress(context, 'sendingFriendshipRequest'.tr(), false);
-        await fireStoreUtils.sendFriendRequest(contact.user, false);
-        if (fromSearch) {
-          _searchResult[index].type = ContactType.PENDING;
-          _contacts
-              .where((user) => user.user.userID == contact.user.userID)
-              .first
-              .type = ContactType.PENDING;
-        }
+        showProgress(context, 'addingtocontacts'.tr(), false);
+        await fireStoreUtils.addToContacts(contact.user, false);
+        // if (fromSearch) {
+        //   _searchResult[index].type = ContactType.PENDING;
+        //   _contacts
+        //       .where((user) => user.user.userID == contact.user.userID)
+        //       .first
+        //       .type = ContactType.PENDING;
+        // }
         break;
     }
   }

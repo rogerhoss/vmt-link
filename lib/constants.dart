@@ -43,9 +43,9 @@ const SOCIAL_COMMENTS = 'socialnetwork_comments';
 const SOCIAL_REACTIONS = 'socialnetwork_reactions';
 const SOCIAL_DISCOVER = 'SocialNetwork_Posts';
 const NOTIFICATIONS = 'notifications';
-const SOCIAL_GRAPH = 'social_graph';
+const ADDRESS_BOOK = 'address_books';
 const RECEIVED_FRIEND_REQUESTS = 'inbound_users';
-const SENT_FRIEND_REQUESTS = 'outbound_users';
+const CONTACTS_LIST = 'contacts_list';
 
 /// helpful formatting constants
 const SECOND_MILLIS = 1000;

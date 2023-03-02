@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import 'package:link/constants.dart';
 import 'package:link/main.dart';
-import 'package:link/model/MessageData.dart';
 import 'package:link/model/PostModel.dart';
 import 'package:link/model/SocialReactionModel.dart';
 import 'package:link/model/StoryModel.dart';
@@ -18,14 +14,10 @@ import 'package:link/services/FirebaseHelper.dart';
 import 'package:link/services/helper.dart';
 import 'package:link/ui/createPost/CreatePostScreen.dart';
 import 'package:link/ui/detailedPost/DetailedPostScreen.dart';
-import 'package:link/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
-import 'package:link/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
-import 'package:link/ui/postStory/PostStoryScreen.dart';
-import 'package:link/ui/profile/ProfileScreen.dart';
 import 'package:link/ui/socialComments/SocialCommentsScreen.dart';
 import 'package:link/ui/storyPage/StoryPage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../feed/FeedModels.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -100,51 +92,51 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
 
-                if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true))
-                  return SizedBox(
-                      height: 100,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 8.0, left: 4, right: 4),
-                        child: InkWell(
-                          onTap: () => _showStoryMenu(),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                        color: Color(COLOR_PRIMARY), width: 2)),
-                                child: displayCircleImage(
-                                    MyAppState.currentUser!.profilePictureURL,
-                                    50,
-                                    false),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  width: 75,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0, left: 8, right: 8),
-                                    child: Text(
-                                      'My Story',
-                                      style: TextStyle(color: Colors.grey),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 1,
-                                    ).tr(),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ));
+                // if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true))
+                //   return SizedBox(
+                //       height: 100,
+                //       child: Padding(
+                //         padding:
+                //             const EdgeInsets.only(top: 8.0, left: 4, right: 4),
+                //         child: InkWell(
+                //           onTap: () => _showStoryMenu(),
+                //           child: Column(
+                //             children: [
+                //               Container(
+                //                 padding: EdgeInsets.all(2),
+                //                 decoration: BoxDecoration(
+                //                     shape: BoxShape.circle,
+                //                     border: Border.all(
+                //                         color: Color(COLOR_PRIMARY), width: 2)),
+                //                 child: displayCircleImage(
+                //                     MyAppState.currentUser!.profilePictureURL,
+                //                     50,
+                //                     false),
+                //               ),
+                //               Expanded(
+                //                 child: Container(
+                //                   width: 75,
+                //                   child: Padding(
+                //                     padding: const EdgeInsets.only(
+                //                         top: 8.0, left: 8, right: 8),
+                //                     child: Text(
+                //                       'My Story',
+                //                       style: TextStyle(color: Colors.grey),
+                //                       textAlign: TextAlign.center,
+                //                       maxLines: 1,
+                //                     ).tr(),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       ));
 
                 Map<String, List<StoryModel>> stories = groupBy(
                     snapshot.data!, (StoryModel story) => story.author.userID);
                 return SizedBox(
-                  height: 100,
+                  height: 20,
                   child: ListView.builder(
                     itemCount: snapshot.hasData ? stories.length : 0,
                     itemBuilder: (context, index) {
@@ -247,368 +239,17 @@ class _HomeScreenState extends State<HomeScreen> {
       initialPage: 0,
     );
     return GestureDetector(
-      onTap: () {
-        _showDetailedPost(post, post.myReaction);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 8),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: () => push(
-                            context,
-                            ProfileScreen(
-                                user: post.author, fromContainer: false)),
-                        child: displayCircleImage(
-                            post.author.profilePictureURL, 55, false),
-                      ),
-                      SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                post.author.fullName(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                setLastSeen(post.createdAt.seconds),
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              if (post.location.isNotEmpty ||
-                                  post.location != 'Unknown Location')
-                                Text(post.location),
-                            ]),
-                      ),
-                    ],
-                  ),
-                  post.postText.isEmpty
-                      ? SizedBox(height: 8)
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            post.postText,
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.grey.shade200
-                                    : Colors.grey.shade900),
-                          ),
-                        ),
-                  if (post.postMedia.isNotEmpty)
-                    Container(
-                      height: 250,
-                      child: Stack(
-                        children: [
-                          PageView.builder(
-                              controller: _controller,
-                              itemCount: post.postMedia.length,
-                              itemBuilder: (context, index) {
-                                Url postMedia = post.postMedia[index];
-                                if (postMedia.mime.contains('video')) {
-                                  return Container(
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          image: post.postMedia[index]
-                                                          .videoThumbnail !=
-                                                      null &&
-                                                  post
-                                                      .postMedia[index]
-                                                      .videoThumbnail!
-                                                      .isNotEmpty
-                                              ? DecorationImage(
-                                                  image: Image.network(post
-                                                          .postMedia[index]
-                                                          .videoThumbnail!)
-                                                      .image)
-                                              : null),
-                                      child: Center(
-                                        child: FloatingActionButton(
-                                          child: Icon(
-                                              CupertinoIcons.play_arrow_solid),
-                                          backgroundColor: Colors.white54,
-                                          heroTag: post.id,
-                                          onPressed: () => push(
-                                              context,
-                                              FullScreenVideoViewer(
-                                                  videoUrl: postMedia.url,
-                                                  heroTag: post.id)),
-                                        ),
-                                      ));
-                                } else if (postMedia.mime.contains('image')) {
-                                  return GestureDetector(
-                                      onTap: () => push(
-                                          context,
-                                          FullScreenImageViewer(
-                                              imageUrl: postMedia.url)),
-                                      child: displayImage(postMedia.url, 150));
-                                } else {
-                                  return Container();
-                                }
-                              }),
-                          if (post.postMedia.length > 1)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 30.0),
-                              child: Align(
-                                alignment: Alignment.bottomCenter,
-                                child: SmoothPageIndicator(
-                                  controller: _controller,
-                                  count: post.postMedia.length,
-                                  effect: ScrollingDotsEffect(
-                                      dotWidth: 6,
-                                      dotHeight: 6,
-                                      dotColor: isDarkMode(context)
-                                          ? Colors.white54
-                                          : Colors.black54,
-                                      activeDotColor: Color(COLOR_PRIMARY)),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  Row(
-                    children: [
-                      SizedBox(width: 6),
-                      FutureBuilder<List<SocialReactionModel>>(
-                        future: _myReactions,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            SocialReactionModel? _postReaction;
-
-                            if (snapshot.data!.isNotEmpty) {
-                              _postReaction = _reactionsList.firstWhereOrNull(
-                                  (element) => element?.postID == post.id);
-                              if (_postReaction != null) {
-                                // your existing code here
-                                switch (_postReaction.reaction) {
-                                  case 'like':
-                                    post.myReaction = Reaction(
-                                      value: 1,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like_fill.png'),
-                                    );
-                                    break;
-                                  case 'love':
-                                    post.myReaction = Reaction(
-                                      value: 2,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/love.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/love.png'),
-                                    );
-                                    break;
-                                  case 'surprised':
-                                    post.myReaction = Reaction(
-                                      value: 3,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/wow.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/wow.png'),
-                                    );
-                                    break;
-                                  case 'laugh':
-                                    post.myReaction = Reaction(
-                                      value: 4,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/haha.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/haha.png'),
-                                    );
-                                    break;
-                                  case 'sad':
-                                    post.myReaction = Reaction(
-                                      value: 5,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/sad.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/sad.png'),
-                                    );
-                                    break;
-                                  case 'angry':
-                                    post.myReaction = Reaction(
-                                      value: 6,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/angry.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/angry.png'),
-                                    );
-                                    break;
-                                  default:
-                                    post.myReaction = Reaction(
-                                      value: 0,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.png'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like.png'),
-                                    );
-                                    break;
-                                }
-                              }
-                            }
-                          }
-                          // Add a return statement at the end
-                          return Container(); // or SizedBox(width: 0, height: 0);
-                        },
-                      ),
-                      SizedBox(width: 8),
-                      if (post.reactionsCount.round() != 0)
-                        Text('${post.reactionsCount.round()}'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                            child: Icon(
-                              CupertinoIcons.conversation_bubble,
-                              size: 20,
-                              color: isDarkMode(context)
-                                  ? Colors.grey.shade200
-                                  : null,
-                            ),
-                            onTap: () => _showCommentsSheet(post)),
-                      ),
-                      if (post.commentCount.round() != 0)
-                        Text('${post.commentCount.round()}'),
-                    ],
-                  ),
-
-                  /* Row(
-                    children: [
-                      SizedBox(width: 6),
-                      FutureBuilder<List<SocialReactionModel>>(
-                        future: _myReactions,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            SocialReactionModel? _postReaction;
-
-                            if (snapshot.data!.isNotEmpty) {
-                              _postReaction = _reactionsList.firstWhereOrNull(
-                                  (element) => element?.postID == post.id);
-                              if (_postReaction != null) {
-                                switch (_postReaction.reaction) {
-                                  case 'like':
-                                    post.myReaction = Reaction(
-                                      value: 1,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like_fill.png'),
-                                    );
-                                    break;
-                                  case 'love':
-                                    post.myReaction = Reaction(
-                                      value: 2,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/love.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/love.png'),
-                                    );
-                                    break;
-                                  case 'surprised':
-                                    post.myReaction = Reaction(
-                                      value: 3,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/wow.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/wow.png'),
-                                    );
-                                    break;
-                                  case 'laugh':
-                                    post.myReaction = Reaction(
-                                      value: 4,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/haha.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/haha.png'),
-                                    );
-                                    break;
-                                  case 'sad':
-                                    post.myReaction = Reaction(
-                                      value: 5,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/sad.gif'),
-                                      icon:
-                                          buildIconFacebook('assets/images/sad.png'),
-                                    );
-                                    break;
-                                  case 'angry':
-                                    post.myReaction = Reaction(
-                                      value: 6,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/angry.gif'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/angry.png'),
-                                    );
-                                    break;
-                                  default:
-                                    post.myReaction = Reaction(
-                                      value: 0,
-                                      previewIcon: buildPreviewIconFacebook(
-                                          'assets/images/like.png'),
-                                      icon: buildIconFacebook(
-                                          'assets/images/like.png'),
-                                    );
-                                    break;
-                                }
-                              }
-                            }
-                        },
-                      ),
-                      SizedBox(width: 8),
-                      if (post.reactionsCount.round() != 0)
-                        Text('${post.reactionsCount.round()}'),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                            child: Icon(
-                              CupertinoIcons.conversation_bubble,
-                              size: 20,
-                              color:
-                                  isDarkMode(context) ? Colors.grey.shade200 : null,
-                            ),
-                            onTap: () => _showCommentsSheet(post)),
-                      ),
-                      if (post.commentCount.round() != 0)
-                        Text('${post.commentCount.round()}'),
-                    ],
-                  ), */
-                ],
-              ),
-              Positioned.directional(
-                textDirection: Directionality.of(context),
-                top: 0,
-                end: 0,
-                child: IconButton(
-                    icon: Icon(
-                      CupertinoIcons.ellipsis,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () => _postSettingsMenu(post)),
-              )
-            ],
+        onTap: () {
+          //_showDetailedPost(post, post.myReaction);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: StandardPostTemplate(
+            post: post,
+            currentController: _controller,
+            context: context,
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   _showCommentsSheet(PostModel post) {
@@ -712,79 +353,79 @@ class _HomeScreenState extends State<HomeScreen> {
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
 
-  _showStoryMenu() {
-    final action = CupertinoActionSheet(
-      message: Text(
-        'addToYourStory',
-        style: TextStyle(fontSize: 15.0),
-      ).tr(),
-      actions: [
-        CupertinoActionSheetAction(
-          child: Text('chooseImageFromGallery').tr(),
-          isDefaultAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            XFile? image =
-                await _imagePicker.pickImage(source: ImageSource.gallery);
-            if (image != null)
-              push(
-                  context,
-                  PostStoryScreen(
-                      storyFile: File(image.path), storyType: 'image'));
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text('takeAPicture').tr(),
-          isDestructiveAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            XFile? image =
-                await _imagePicker.pickImage(source: ImageSource.camera);
-            if (image != null)
-              push(
-                  context,
-                  PostStoryScreen(
-                      storyFile: File(image.path), storyType: 'image'));
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text('chooseVideoFromGallery').tr(),
-          isDefaultAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            XFile? video =
-                await _imagePicker.pickVideo(source: ImageSource.gallery);
-            if (video != null)
-              push(
-                  context,
-                  PostStoryScreen(
-                      storyFile: File(video.path), storyType: 'video'));
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: Text('recordVideo').tr(),
-          isDestructiveAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            XFile? video =
-                await _imagePicker.pickVideo(source: ImageSource.camera);
-            if (video != null)
-              push(
-                  context,
-                  PostStoryScreen(
-                      storyFile: File(video.path), storyType: 'video'));
-          },
-        ),
-      ],
-      cancelButton: CupertinoActionSheetAction(
-        child: Text('cancel').tr(),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    );
-    showCupertinoModalPopup(context: context, builder: (context) => action);
-  }
+  // _showStoryMenu() {
+  //   final action = CupertinoActionSheet(
+  //     message: Text(
+  //       'addToYourStory',
+  //       style: TextStyle(fontSize: 15.0),
+  //     ).tr(),
+  //     actions: [
+  //       CupertinoActionSheetAction(
+  //         child: Text('chooseImageFromGallery').tr(),
+  //         isDefaultAction: false,
+  //         onPressed: () async {
+  //           Navigator.pop(context);
+  //           XFile? image =
+  //               await _imagePicker.pickImage(source: ImageSource.gallery);
+  //           if (image != null)
+  //             push(
+  //                 context,
+  //                 PostStoryScreen(
+  //                     storyFile: File(image.path), storyType: 'image'));
+  //         },
+  //       ),
+  //       CupertinoActionSheetAction(
+  //         child: Text('takeAPicture').tr(),
+  //         isDestructiveAction: false,
+  //         onPressed: () async {
+  //           Navigator.pop(context);
+  //           XFile? image =
+  //               await _imagePicker.pickImage(source: ImageSource.camera);
+  //           if (image != null)
+  //             push(
+  //                 context,
+  //                 PostStoryScreen(
+  //                     storyFile: File(image.path), storyType: 'image'));
+  //         },
+  //       ),
+  //       CupertinoActionSheetAction(
+  //         child: Text('chooseVideoFromGallery').tr(),
+  //         isDefaultAction: false,
+  //         onPressed: () async {
+  //           Navigator.pop(context);
+  //           XFile? video =
+  //               await _imagePicker.pickVideo(source: ImageSource.gallery);
+  //           if (video != null)
+  //             push(
+  //                 context,
+  //                 PostStoryScreen(
+  //                     storyFile: File(video.path), storyType: 'video'));
+  //         },
+  //       ),
+  //       CupertinoActionSheetAction(
+  //         child: Text('recordVideo').tr(),
+  //         isDestructiveAction: false,
+  //         onPressed: () async {
+  //           Navigator.pop(context);
+  //           XFile? video =
+  //               await _imagePicker.pickVideo(source: ImageSource.camera);
+  //           if (video != null)
+  //             push(
+  //                 context,
+  //                 PostStoryScreen(
+  //                     storyFile: File(video.path), storyType: 'video'));
+  //         },
+  //       ),
+  //     ],
+  //     cancelButton: CupertinoActionSheetAction(
+  //       child: Text('cancel').tr(),
+  //       onPressed: () {
+  //         Navigator.pop(context);
+  //       },
+  //     ),
+  //   );
+  //   showCupertinoModalPopup(context: context, builder: (context) => action);
+  // }
 
   void _showDetailedPost(PostModel post, Reaction defaultInitialReaction) {
     push(
