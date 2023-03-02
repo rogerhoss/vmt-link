@@ -38,6 +38,8 @@ import 'package:uuid/uuid.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../model/ChaptersModel.dart';
+
 class FireStoreUtils {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   static FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -182,62 +184,119 @@ class FireStoreUtils {
   /// * users that are already your friends
   /// * if @param searchScreen is true then we include users that you didn't
   /// send friend/follow requests and neither did they.
+
+// Begining of test code
   Future<List<ContactModel>> getPeople(String userID, bool contactsOnly) async {
     /// get users that are in your contacts
     contacts = await getContacts(MyAppState.currentUser!.userID);
 
-    /// get users that you sent them friend/follow requests
-    // pendingList = await getPendingRequests();
+    /// get members of a given chapter
+    var chapter = await getChapterInfo('dn5Kp6XUlYWzPa1JyC7N');
 
-    /// get users that sent you friend/follow requests
+    /// get the user details of the members of the chapter
+    final membersRef = FirebaseFirestore.instance.collection('users');
+    // This selected only the people in ones chapter.  I commented this out
+    // so that ALL members show up uder people for now.
+    // final membersDocs = await membersRef
+    //     .where(FieldPath.documentId, whereIn: chapter['members'])
+    //     .get();
+    // Added to get ALL members
+    final membersDocs = await membersRef.get();
+
+    /// time to create the list of people
     contactsList = [];
+
+    /// first include all of the poeple in my contacts list (address book)
     for (final friend in contacts) {
-      /// looping over the friends list
-      /// we set contactModel.type to be FRIEND and add the contactModel to
-      /// the contacts list
       contactsList.add(ContactModel(type: ContactType.FRIEND, user: friend));
     }
+
+    /// If I only want contacts then set contactsOnly to true
     if (!contactsOnly) {
-      /// if this is true, this means we want to include strangers in our
-      /// final contacts list, good when you want to search for new users
-      await firestore.collection(USERS).get().then((onValue) {
-        /// we loop over the list of users
-        onValue.docs.asMap().forEach((index, user) {
-          try {
-            User contact = User.fromJson(user.data());
+      /// Go through the list of members in the chapter
+      for (final user in membersDocs.docs) {
+        User contact = User.fromJson(user.data());
 
-            /// check if the contact is already in our friends list
-            User? friend = contacts
-                .firstWhereOrNull((user) => user?.userID == contact.userID);
+        /// check if the member is already in our contacts list
+        User? friend =
+            contacts.firstWhereOrNull((user) => user?.userID == contact.userID);
 
-            bool isUnknown = friend == null;
-            if (user.id != userID) {
-              if (isUnknown) {
-                if (contact.userID.isEmpty) contact.userID = user.id;
+        bool isUnknown = friend == null;
+        if (user.id != userID) {
+          // Skip if it is the member is the current user
+          if (isUnknown) {
+            if (contact.userID.isEmpty) contact.userID = user.id;
 
-                /// we set contactModel.type to be UNKNOWN and add the contactModel to
-                /// the contacts list
-                contactsList.add(
-                    ContactModel(type: ContactType.UNKNOWN, user: contact));
-              }
-            }
-          } catch (e) {
-            print('FireStoreUtils.getContacts Users table invalid json '
-                'structure exception, doc id is => ${user.id}');
+            /// add the member to the people list
+            contactsList
+                .add(ContactModel(type: ContactType.UNKNOWN, user: contact));
           }
-        });
-      }, onError: (e) {
-        print('error $e');
-      });
+        }
+      }
     }
-
-    // /// lastly we remove blocked users from the list
-    // contactsList
-    //     .removeWhere((element) => validateIfUserBlocked(element.user.userID));
-
-    /// we remove duplicated users and then return the list of contacts
     return contactsList.toSet().toList();
   }
+
+// End of test code.  The original is below.
+
+  // This code is the original
+  // Future<List<ContactModel>> getPeople(String userID, bool contactsOnly) async {
+  //   /// get users that are in your contacts
+  //   contacts = await getContacts(MyAppState.currentUser!.userID);
+
+  //   /// get users that you sent them friend/follow requests
+  //   // pendingList = await getPendingRequests();
+
+  //   /// get users that sent you friend/follow requests
+  //   contactsList = [];
+  //   for (final friend in contacts) {
+  //     /// looping over the friends list
+  //     /// we set contactModel.type to be FRIEND and add the contactModel to
+  //     /// the contacts list
+  //     contactsList.add(ContactModel(type: ContactType.FRIEND, user: friend));
+  //   }
+  //   if (!contactsOnly) {
+  //     /// if this is true, this means we want to include strangers in our
+  //     /// final contacts list, good when you want to search for new users
+  //     await firestore.collection(USERS).get().then((onValue) {
+  //       /// we loop over the list of users
+  //       onValue.docs.asMap().forEach((index, user) {
+  //         try {
+  //           User contact = User.fromJson(user.data());
+
+  //           /// check if the contact is already in our friends list
+  //           User? friend = contacts
+  //               .firstWhereOrNull((user) => user?.userID == contact.userID);
+
+  //           bool isUnknown = friend == null;
+  //           if (user.id != userID) {
+  //             if (isUnknown) {
+  //               if (contact.userID.isEmpty) contact.userID = user.id;
+
+  //               /// we set contactModel.type to be UNKNOWN and add the contactModel to
+  //               /// the contacts list
+  //               contactsList.add(
+  //                   ContactModel(type: ContactType.UNKNOWN, user: contact));
+  //             }
+  //           }
+  //         } catch (e) {
+  //           print('FireStoreUtils.getContacts Users table invalid json '
+  //               'structure exception, doc id is => ${user.id}');
+  //         }
+  //       });
+  //     }, onError: (e) {
+  //       print('error $e');
+  //     });
+  //   }
+
+  //   // /// lastly we remove blocked users from the list
+  //   // contactsList
+  //   //     .removeWhere((element) => validateIfUserBlocked(element.user.userID));
+
+  //   /// we remove duplicated users and then return the list of contacts
+  //   return contactsList.toSet().toList();
+  // }
+  // End of This code is the original
 
   /// query with userID to get this user's friends
   /// @param userID the id of the user
@@ -248,14 +307,14 @@ class FireStoreUtils {
 
     /// query the users that sent you friend/follow requests
     // QuerySnapshot<Map<String, dynamic>> receivedFriendsResult = await firestore
-    //     .collection(SOCIAL_GRAPH)
+    //     .collection(ADDRESS_BOOK)
     //     .doc(userID)
     //     .collection(RECEIVED_FRIEND_REQUESTS)
     //     .get();
 
     /// query the users that you sent them friend/follow requests
     QuerySnapshot<Map<String, dynamic>> sentFriendsResult = await firestore
-        .collection(SOCIAL_GRAPH)
+        .collection(ADDRESS_BOOK)
         .doc(userID)
         .collection(CONTACTS_LIST)
         .get();
@@ -273,7 +332,6 @@ class FireStoreUtils {
       // if (friendOrNull != null) actualFriends.add(pendingUser);
       actualContacts.add(pendingUser);
     });
-
     // actualFriends
     //     .removeWhere((element) => validateIfUserBlocked(element.userID));
     return actualContacts.toSet().toList();
@@ -287,14 +345,14 @@ class FireStoreUtils {
 
   //   /// query the users that you sent them friend/follow requests
   //   QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(MyAppState.currentUser!.userID)
   //       .collection(CONTACTS_LIST)
   //       .get();
 
   //   /// query the users that sent you friend/follow requests
   //   QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(MyAppState.currentUser!.userID)
   //       .collection(RECEIVED_FRIEND_REQUESTS)
   //       .get();
@@ -322,14 +380,14 @@ class FireStoreUtils {
 
   //   /// query the users that sent you friend/follow requests
   //   QuerySnapshot<Map<String, dynamic>> receivedRequestsResult = await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(MyAppState.currentUser!.userID)
   //       .collection(RECEIVED_FRIEND_REQUESTS)
   //       .get();
 
   //   /// query the users that you sent them friend/follow requests
   //   QuerySnapshot<Map<String, dynamic>> sentRequestsResult = await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(MyAppState.currentUser!.userID)
   //       .collection(CONTACTS_LIST)
   //       .get();
@@ -356,14 +414,14 @@ class FireStoreUtils {
   /// calling this from profile
   // onFriendAccept(User pendingUser, bool fromProfile) async {
   //   await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(MyAppState.currentUser!.userID)
   //       .collection(CONTACTS_LIST)
   //       .doc(pendingUser.userID)
   //       .set(pendingUser.toJson());
 
   //   await firestore
-  //       .collection(SOCIAL_GRAPH)
+  //       .collection(ADDRESS_BOOK)
   //       .doc(pendingUser.userID)
   //       .collection(RECEIVED_FRIEND_REQUESTS)
   //       .doc(MyAppState.currentUser!.userID)
@@ -467,7 +525,7 @@ class FireStoreUtils {
   /// are calling this from profile screen
   removeFromContacts(User friend, bool fromProfile) async {
     await firestore
-        .collection(SOCIAL_GRAPH)
+        .collection(ADDRESS_BOOK)
         .doc(MyAppState.currentUser!.userID)
         .collection(CONTACTS_LIST)
         .doc(friend.userID)
@@ -489,7 +547,7 @@ class FireStoreUtils {
   /// are calling this from profile screen
   addToContacts(User user, bool fromProfile) async {
     await firestore
-        .collection(SOCIAL_GRAPH)
+        .collection(ADDRESS_BOOK)
         .doc(MyAppState.currentUser!.userID)
         .collection(CONTACTS_LIST)
         .doc(user.userID)
@@ -1538,14 +1596,14 @@ class FireStoreUtils {
   Future<String> getUserSocialRelation(String userID) async {
     String relation = 'Add Friend';
     DocumentSnapshot receivedRequestsTableResult = await firestore
-        .collection(SOCIAL_GRAPH)
+        .collection(ADDRESS_BOOK)
         .doc(MyAppState.currentUser!.userID)
         .collection(RECEIVED_FRIEND_REQUESTS)
         .doc(userID)
         .get();
 
     DocumentSnapshot sentRequestsTableResult = await firestore
-        .collection(SOCIAL_GRAPH)
+        .collection(ADDRESS_BOOK)
         .doc(MyAppState.currentUser!.userID)
         .collection(CONTACTS_LIST)
         .doc(userID)
@@ -2064,9 +2122,9 @@ class FireStoreUtils {
         }
       });
 
-      //delete user stories from SOCIAL_GRAPH collection group
+      //delete user stories from ADDRESS_BOOK collection group
       await firestore
-          .collection(SOCIAL_GRAPH)
+          .collection(ADDRESS_BOOK)
           .doc(MyAppState.currentUser!.userID)
           .delete();
 
@@ -2141,4 +2199,75 @@ sendNotification(String token, String title, String body,
       },
     ),
   );
+}
+
+// Test code
+class Category {
+  String name;
+  List<Category>? subcategories;
+
+  Category(this.name, [this.subcategories]);
+
+  factory Category.fromSnapshot(DocumentSnapshot snapshot) {
+    var data = snapshot.data()! as Map<String, dynamic>;
+    var subcategoriesData = data['subcategories'] as List<dynamic>?;
+    var subcategories = subcategoriesData != null
+        ? subcategoriesData.map((e) => Category.fromMap(e)).toList()
+        : null;
+    return Category(data['name'], subcategories);
+  }
+
+  static Category fromMap(Map<String, dynamic> map) => Category(
+      map['name'],
+      (map['subcategories'] as List<dynamic>?)
+          ?.map((e) => Category.fromMap(e))
+          .toList());
+}
+
+Future<List<Category>> buildCategoryArray() async {
+  var countryDocs = await FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: 'Country')
+      .get();
+  var countryDocsData = countryDocs.docs.map((e) => e.data()).toList();
+  if (countryDocsData.length != 1) {
+    throw Exception('Expected to find one Country document');
+  }
+  var countryDocData = countryDocsData[0];
+  var country = Category.fromMap(countryDocData);
+
+  var subnationalDocs = await FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: 'SubNational')
+      .get();
+  var subnationalDocsData = subnationalDocs.docs.map((e) => e.data()).toList();
+  if (subnationalDocsData.length != 1) {
+    throw Exception('Expected to find one SubNational document');
+  }
+  var subnationalDocData = subnationalDocsData[0];
+  var subnational = Category.fromMap(subnationalDocData);
+
+  var localDocs = await FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: 'Local')
+      .get();
+  var localDocsData = localDocs.docs.map((e) => e.data()).toList();
+  if (localDocsData.length != 1) {
+    throw Exception('Expected to find one Local document');
+  }
+  var localDocData = localDocsData[0];
+  var local = Category.fromMap(localDocData);
+
+  var chapterDocs = await FirebaseFirestore.instance
+      .collection('categories')
+      .where('name', isEqualTo: 'Chapter')
+      .get();
+  var chapterDocsData = chapterDocs.docs.map((e) => e.data()).toList();
+  if (chapterDocsData.length != 1) {
+    throw Exception('Expected to find one Chapter document');
+  }
+  var chapterDocData = chapterDocsData[0];
+  var chapter = Category.fromMap(chapterDocData);
+
+  return [country, subnational, local, chapter];
 }

@@ -12,6 +12,7 @@ import 'package:link/ui/conversationsScreen/ConversationsScreen.dart';
 import 'package:link/ui/createGroup/CreateGroupScreen.dart';
 import 'package:link/ui/createPost/CreatePostScreen.dart';
 import 'package:link/ui/discover/DiscoverScreen.dart';
+import 'package:link/ui/discover/TestScreen.dart';
 import 'package:link/ui/people/PeopleScreen.dart';
 import 'package:link/ui/home/HomeScreen.dart';
 import 'package:link/ui/notifications/NotificationsScreen.dart';
@@ -91,7 +92,9 @@ class _ContainerScreen extends State<ContainerScreen> {
                           _selectedTapIndex = 2;
                           _drawerSelection = DrawerSelection.Events;
                           _appBarTitle = 'events'.tr();
-                          _currentWidget = DiscoverScreen();
+                          _currentWidget = TestScreen(
+                            user: user,
+                          );
                         });
                         break;
                       }

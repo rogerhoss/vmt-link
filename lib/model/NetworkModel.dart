@@ -5,18 +5,26 @@ import 'package:flutter/foundation.dart';
 
 class User with ChangeNotifier {
   String email;
+
   String firstName;
+
   String lastName;
+
   UserSettings settings;
+
   String phoneNumber = '';
+
   bool active;
+
   Timestamp lastOnlineTimestamp;
+
   String userID;
+
   String profilePictureURL;
+
   String appIdentifier = 'Flutter Social Network ${Platform.operatingSystem}';
+
   String fcmToken;
-  String chapter;
-  String visibilityCeiling;
 
   List<dynamic> photos;
 
@@ -34,8 +42,6 @@ class User with ChangeNotifier {
     lastOnlineTimestamp,
     settings,
     this.fcmToken = '',
-    this.chapter = '',
-    this.visibilityCeiling = '',
     this.photos = const [],
   })  : this.lastOnlineTimestamp = lastOnlineTimestamp ?? Timestamp.now(),
         this.settings = settings ?? UserSettings();
@@ -58,8 +64,6 @@ class User with ChangeNotifier {
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
-        chapter: parsedJson['chapter'] ?? '',
-        visibilityCeiling: parsedJson['visibilityCeiling'] ?? '',
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
@@ -69,8 +73,8 @@ class User with ChangeNotifier {
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',
         active: parsedJson['active'] ?? false,
-        lastOnlineTimestamp: Timestamp.fromMillisecondsSinceEpoch(
-            parsedJson['lastOnlineTimestamp']),
+        lastOnlineTimestamp:
+            Timestamp.fromMillisecondsSinceEpoch(parsedJson['lastOnlineTimestamp']),
         settings: parsedJson.containsKey('settings')
             ? UserSettings.fromJson(parsedJson['settings'])
             : UserSettings(),
@@ -78,8 +82,6 @@ class User with ChangeNotifier {
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
-        chapter: parsedJson['chapter'] ?? '',
-        visibilityCeiling: parsedJson['visibilityCeiling'] ?? '',
         photos: parsedJson['photos'] ?? [].cast<String>());
   }
 
@@ -97,8 +99,6 @@ class User with ChangeNotifier {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
-      'chapter': this.chapter,
-      'visibilityCeiling': this.visibilityCeiling,
       'photos': this.photos,
     };
   }
@@ -117,8 +117,6 @@ class User with ChangeNotifier {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
-      'chapter': this.chapter,
-      'visibilityCeiling': this.visibilityCeiling,
       'photos': this.photos,
     };
   }

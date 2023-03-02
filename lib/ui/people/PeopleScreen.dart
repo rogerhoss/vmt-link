@@ -105,7 +105,7 @@ class _ContactsScreenState extends State<FriendsScreen> {
                 separatorBuilder: (context, index) => Divider(),
                 itemCount: snap.data!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  // _contacts = snap.data!;
+                  _contacts = snap.data!;
                   ContactModel contact = snap.data![index];
                   return Padding(
                     padding: const EdgeInsets.only(top: 4.0, bottom: 4.0),
@@ -160,7 +160,6 @@ class _ContactsScreenState extends State<FriendsScreen> {
                         ),
                         onPressed: () async {
                           await _onContactButtonClicked(contact, index, false);
-                          hideProgress();
                           setState(() {});
                         },
                         child: Icon(
@@ -187,25 +186,31 @@ class _ContactsScreenState extends State<FriendsScreen> {
         return CupertinoIcons.person_crop_square_fill;
       case ContactType.UNKNOWN:
         return CupertinoIcons.person_crop_square;
-      // // case ContactType.BLOCKED:
-      // //   return 'unblock';
-      // default:
     }
   }
 
   _onContactButtonClicked(
       ContactModel contact, int index, bool fromSearch) async {
+    ContactType newType = contact.type == ContactType.FRIEND
+        ? ContactType.UNKNOWN
+        : ContactType.FRIEND;
+
     switch (contact.type) {
       case ContactType.FRIEND:
-        showProgress(context, 'removingFromContacts'.tr(), false);
-        await fireStoreUtils.removeFromContacts(contact.user, false);
-        _contacts.removeAt(index);
+        // showProgress(context, 'removingFromContacts'.tr(), false);
+        await fireStoreUtils.removeFromContacts(contact.user, true);
         break;
       case ContactType.UNKNOWN:
-        showProgress(context, 'addingtocontacts'.tr(), false);
+        // showProgress(context, 'addingtocontacts'.tr(), false);
         await fireStoreUtils.addToContacts(contact.user, false);
-//        _contacts.add(value)
         break;
     }
+    // Update the contact object with the new type
+    contact.type = newType;
+
+    // Update the contact in the list
+    setState(() {
+      _contacts[index] = contact;
+    });
   }
 }
